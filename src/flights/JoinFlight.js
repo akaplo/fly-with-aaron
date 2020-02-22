@@ -24,6 +24,17 @@ const styles = makeStyles({
     left: {
         display: 'flex',
         flexDirection: 'column'
+    },
+    container: {
+        marginTop: '2rem'
+    },
+    headerText: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        marginBottom: '1rem',
+        fontWeight: 'bold',
+        fontSize: 'large',
+        marginLeft: '0.5rem'
     }
 });
 const JoinFlight = ({ userID }) => {
@@ -40,7 +51,7 @@ const JoinFlight = ({ userID }) => {
         });
     }, []);
     return (
-        <div>
+        <div className={ classes.container }>
             <ComeFlyingModal
                 flight={ flightToJoin }
                 open={ showComeFlyingModal}
@@ -56,8 +67,9 @@ const JoinFlight = ({ userID }) => {
                 }}
             />
             { joinFlightError }
-            <span>There are { upcomingFlights.length } upcoming flights in the next { timeWindow } that you aren't already on</span>
-            <br/><br/>
+            <span className={ classes.headerText}>
+                Flights To Join:
+            </span>
             {
                 upcomingFlights.map(f => {
                     const daysUntilFlight = (new Date(f.flight_date) - new Date())/1000/60/60/24;
