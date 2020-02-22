@@ -6,7 +6,7 @@ import Dashboard from "./dashboard/Dashboard";
 
 const App = ({}) => {
     const [ loggedIn, setLoggedIn] = useState(true);
-    const [ user, setUser ] = useState(users[0]);
+    const [ user, setUser ] = useState(users[7]);
     const [ loginError, setLoginError ] = useState('');
     const handleLogin = (uname, pw) => {
         console.log(uname)
