@@ -3,8 +3,22 @@ import { Input, Button, Dialog, DialogTitle, DialogContentText, DialogActions, D
 import { getJoinableFlights, joinFlight } from "../actions/actions";
 import moment from 'moment';
 import Flight from "./Flight";
+import { makeStyles } from "@material-ui/core/styles";
 
+const styles = makeStyles({
+    flightContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '2rem'
+    },
+    join: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        flexDirection: 'column'
+    }
+});
 const JoinFlight = ({ userID }) => {
+    const classes = styles();
     const [upcomingFlights, setFlights] = useState([]);
     const [timeWindow, setTimeWindow] = useState('1 month');
     const [flightToJoin, setFlightToJoin] = useState({});
@@ -36,9 +50,10 @@ const JoinFlight = ({ userID }) => {
             <br/><br/>
             {
                 upcomingFlights.map(f =>
-                    <Fragment>
+                    <div className={ classes.flightContainer }>
                         <Flight flight={ f }/>
-                        <Tooltip title={ f.passengers.length === 4 ? 'Flight is full' : '' } arrow>
+                        <div className={ classes.join }>
+                            <Tooltip title={ f.passengers.length === 4 ? 'Flight is full' : '' } arrow>
                             <span>
                                 <Button
                                     disabled={ f.passengers.length === 4 }
@@ -50,8 +65,9 @@ const JoinFlight = ({ userID }) => {
                                 Come flying!
                             </Button>
                             </span>
-                        </Tooltip>
-                    </Fragment>
+                            </Tooltip>
+                        </div>
+                    </div>
                 )
             }
         </div>

@@ -44,84 +44,96 @@ export const users = [
         email: 'akaplo@comcast.net',
         id: 1,
         phone: '800-call-aaron',
-        admin: true
+        admin: true,
+        weight: 160
     },
     {
         name: 'Jon Bohrer',
         email: 'jbohrer@vmware.com',
         id: 2,
         phone: '845-802-7811',
-        admin: false
+        admin: false,
+        weight: 180
     },
     {
         name: 'Sophia Weisman',
         email: 'sweisman@vmware.com',
         id: 3,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 120
     },
     {
         name: 'Greg Daneault',
         email: 'gdaneault@vmware.com',
         id: 4,
         phone: '987-456-9876',
-        admin: false
+        admin: false,
+        weight: 190
     },
     {
         name: 'Dylan Kaplowitz',
         email: 'dkaps@yahoo.com',
         id: 5,
         phone: '501-000-1111',
-        admin: false
+        admin: false,
+        weight: 165
     },
     {
         name: 'Michael Leitken',
         email: 'michael@somewhere.com',
         id: 6,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 150
     },
     {
         name: 'Jill Lund',
         email: 'jill@vmware.com',
         id: 7,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 160
     },
     {
         name: 'Jimmy Desj',
         email: 'jimd@vmware.com',
         id: 8,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 185
     },
     {
         name: 'Johnny Gill',
         email: 'johnny@vmware.com',
         id: 9,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 155
     },
     {
         name: 'Kev Johnson',
         email: 'showusyour@vmware.com',
         id: 10,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 135
     },
     {
         name: 'Spence Gagn',
         email: 'spencer@vmware.com',
         id: 11,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 120
     },
     {
         name: 'Raina Galbiati',
         email: 'raga@vmware.com',
         id: 12,
         phone: '999-000-1111',
-        admin: false
+        admin: false,
+        weight: 175
     }
 ];
 
