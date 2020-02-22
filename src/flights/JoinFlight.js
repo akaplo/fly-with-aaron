@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Input, Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent } from "@material-ui/core";
+import { Input, Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent, Tooltip } from "@material-ui/core";
 import { getJoinableFlights, joinFlight } from "../actions/actions";
 import moment from 'moment';
 import Flight from "./Flight";
@@ -38,15 +38,19 @@ const JoinFlight = ({ userID }) => {
                 upcomingFlights.map(f =>
                     <Fragment>
                         <Flight flight={ f }/>
-                            <Button
-                                disabled={ f.passengers.length === 4 }
-                                onClick={ () => {
-                                    setShowModal(true);
-                                    setFlightToJoin(f);
-                                } }
-                            >
+                        <Tooltip title={ f.passengers.length === 4 ? 'Flight is full' : '' } arrow>
+                            <span>
+                                <Button
+                                    disabled={ f.passengers.length === 4 }
+                                    onClick={ () => {
+                                        setShowModal(true);
+                                        setFlightToJoin(f);
+                                    } }
+                                >
                                 Come flying!
                             </Button>
+                            </span>
+                        </Tooltip>
                     </Fragment>
                 )
             }
