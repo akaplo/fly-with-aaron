@@ -5,10 +5,11 @@ import JoinFlight from "../flights/JoinFlight";
 import CreateFlight from "../flights/CreateFlight";
 import AllFlights from "../flights/AllFlights";
 import Users from "../users/Users";
+import TopBar from "./TopBar";
 function Dashboard({ user }) {
     return (
         <div>
-            Welcome { user.name }
+            <TopBar user={ user }/>
             { !user.admin &&
                 <Fragment>
                     <br/><br/>
