@@ -27,39 +27,23 @@ const styles = makeStyles(theme => ({
 }));
 const TopBar = ({ user }) => {
     const classes = styles();
-    const [upcomingFlights, setFlights] = useState([]);
-    const [timeWindow, setTimeWindow] = useState('1 month');
-    const [flightToJoin, setFlightToJoin] = useState({});
-    const [showComeFlyingModal, setShowModal] = useState(false);
-    const [joinFlightError, setJoinFlightError] = useState('');
 
     return (
-        <div>
-            {/*<ComeFlyingModal*/}
-            {/*    flight={ flightToJoin }*/}
-            {/*    open={ showComeFlyingModal}*/}
-            {/*    handleClose={ () => setShowModal(false) }*/}
-            {/*    handleSave={ () => {*/}
-            {/*        setShowModal(false);*/}
-            {/*        joinFlight(userID, flightToJoin.id).then(() => {*/}
-            {/*            setFlightToJoin({});*/}
-            {/*            getJoinableFlights(userID);*/}
-            {/*        }).catch(() => {*/}
-            {/*            setJoinFlightError('Unable to join flight')*/}
-            {/*        });*/}
-            {/*    }}*/}
-            {/*/>*/}
-            <AppBar position="static">
-                <Toolbar variant={ 'dense' } className={ classes.flex }>
+        <AppBar position="static">
+            <Toolbar variant={ 'dense' } className={ classes.flex }>
+                <Typography variant={ 'h5' } className={classes.name}>
+                    Fly With Aaron
+                </Typography>
+                { user.admin &&
                     <Typography variant={ 'h5' } className={classes.name}>
-                        Fly With Aaron
+                        Administrator View
                     </Typography>
-                    <Typography className={classes.name} >
-                        { user.name }
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            </div>
+                }
+                <Typography className={classes.name} >
+                    { user.name }
+                </Typography>
+            </Toolbar>
+        </AppBar>
     );
 };
 //

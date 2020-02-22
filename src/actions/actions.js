@@ -35,7 +35,7 @@ export const joinFlight = (userID, flightID) => {
 };
 
 export const createFlight = (flight) => {
-    flight.passengers.push(users[0]);
+    return Promise.resolve(flight.passengers.push(users[0]));
 };
 
 export const users = [

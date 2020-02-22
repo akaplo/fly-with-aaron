@@ -21,9 +21,6 @@ function Dashboard({ user }) {
             <br/>
             { user.admin &&
                 <Fragment>
-                    (administrator console)
-                    <br/><br/>
-                    <hr/>
                     <CreateFlight userID={ user.id }/>
                     <hr/>
                     <AllFlights userID={ user.id }/>

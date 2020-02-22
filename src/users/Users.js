@@ -6,11 +6,12 @@ import {
     Button,
     Dialog,
     DialogTitle,
-    DialogContent,
-    DialogContentText, DialogActions
+    DialogContent, IconButton,
+    DialogContentText, DialogActions, List, ListItem, ListItemText
 } from "@material-ui/core";
 import {createFlight, getAllUsers } from "../actions/actions";
 import moment from 'moment';
+import { ArrowRight } from "@material-ui/icons";
 import User from "./User";
 import UpcomingFlights from "../flights/UpcomingFlights";
 
@@ -30,18 +31,25 @@ const Users = ({ userID }) => {
                 open={ showUserModal}
                 handleClose={ () => setShowModal(false) }
             />
-            { allUsers.map(u =>
-                <div onClick={ () => {
-                    if (!u.admin) {
-                        setSelectedUser(u);
-                        setShowModal(true);
-                    }
-                }}>
-                    <User user={ u }/>
-                    <div>---</div>
-                </div>
-                )
-            }
+            <List>
+                { allUsers.sort((a, b) => {
+                    if (a.name < b.name) return -1;
+                    if (a.name > b.name) return 1;
+                    return 0;
+                }).map(u =>
+                    <ListItem
+                        button
+                        onClick={ () => {
+                            if (!u.admin) {
+                                setSelectedUser(u);
+                                setShowModal(true);
+                            }
+                        }}
+                    >
+                        <User user={ u }/>
+                    </ListItem>
+                )}
+            </List>
         </div>
     );
 };
