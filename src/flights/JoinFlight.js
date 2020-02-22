@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Input, Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent, Tooltip } from "@material-ui/core";
+import { Alert } from '@material-ui/lab'
 import { getJoinableFlights, joinFlight } from "../actions/actions";
 import moment from 'moment';
 import Flight from "./Flight";
@@ -9,11 +10,19 @@ const styles = makeStyles({
     flightContainer: {
         display: 'flex',
         justifyContent: 'space-between',
-        marginBottom: '2rem'
+        margin: '0 1rem 2rem 1rem'
     },
     join: {
         display: 'flex',
         justifyContent: 'flex-end',
+        flexDirection: 'column',
+    },
+    soonWarning: {
+        fontStyle: 'italic',
+        color: '#ff7300'
+    },
+    left: {
+        display: 'flex',
         flexDirection: 'column'
     }
 });
@@ -24,6 +33,7 @@ const JoinFlight = ({ userID }) => {
     const [flightToJoin, setFlightToJoin] = useState({});
     const [showComeFlyingModal, setShowModal] = useState(false);
     const [joinFlightError, setJoinFlightError] = useState('');
+
     useEffect(() => {
         getJoinableFlights(userID).then(flights => {
             setFlights(flights);
@@ -49,26 +59,44 @@ const JoinFlight = ({ userID }) => {
             <span>There are { upcomingFlights.length } upcoming flights in the next { timeWindow } that you aren't already on</span>
             <br/><br/>
             {
-                upcomingFlights.map(f =>
-                    <div className={ classes.flightContainer }>
-                        <Flight flight={ f }/>
-                        <div className={ classes.join }>
-                            <Tooltip title={ f.passengers.length === 4 ? 'Flight is full' : '' } arrow>
-                            <span>
-                                <Button
-                                    disabled={ f.passengers.length === 4 }
-                                    onClick={ () => {
-                                        setShowModal(true);
-                                        setFlightToJoin(f);
-                                    } }
-                                >
-                                Come flying!
-                            </Button>
-                            </span>
+                upcomingFlights.map(f => {
+                    const daysUntilFlight = (new Date(f.flight_date) - new Date())/1000/60/60/24;
+                    const isFull = f.passengers.length === 4;
+                    return <div className={classes.flightContainer}>
+                        <div className={ classes.left }>
+                            <Flight flight={f}/>
+                        </div>
+                        {
+                            daysUntilFlight < 3 && !isFull &&
+                            <div className={ classes.soonWarning }><Alert severity="warning">We need { 4 - f.passengers.length } more!</Alert></div>
+                        }
+                        {
+                            daysUntilFlight <= 5 && daysUntilFlight > 3 && !isFull &&
+                            <div className={ classes.soonWarning }><Alert severity="info">Happening real soon, join us!</Alert></div>
+                        }
+                        {
+                            f.passengers.length < 3 && daysUntilFlight > 5 && daysUntilFlight < 10 &&
+                            <div className={ classes.soonWarning }><Alert severity="info">Needs more people!</Alert></div>
+                        }
+                        <div className={classes.join}>
+                            <Tooltip title={ isFull ? 'Flight is full' : '' } arrow>
+                                <span>
+                                    <Button
+                                        color={ 'primary' }
+                                        disabled={ isFull }
+                                        onClick={() => {
+                                            setShowModal(true);
+                                            setFlightToJoin(f);
+                                        }}
+                                        variant={ 'contained' }
+                                    >
+                                    Come flying!
+                                </Button>
+                                </span>
                             </Tooltip>
                         </div>
                     </div>
-                )
+                })
             }
         </div>
     );
