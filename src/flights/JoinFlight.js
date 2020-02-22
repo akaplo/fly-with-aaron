@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Input, Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent } from "@material-ui/core";
 import { getJoinableFlights, joinFlight } from "../actions/actions";
 import moment from 'moment';
+import Flight from "./Flight";
 
 const JoinFlight = ({ userID }) => {
     const [upcomingFlights, setFlights] = useState([]);
@@ -32,25 +33,22 @@ const JoinFlight = ({ userID }) => {
             />
             { joinFlightError }
             <span>There are { upcomingFlights.length } upcoming flights in the next { timeWindow } that you aren't already on</span>
+            <br/><br/>
             {
-                upcomingFlights.map(f => {
-                    const date = moment(f.flight_date);
-                    return <div>
-                        <div>On <b>{ date.format('dddd, MMMM Do') }</b> at { date.format('h:mm:ss a') }</div>
-                        <div>{ f.origin } -> { f.destination }</div>
-                        <span>Flight currently has { f.passengers.map(p => p.name).join(',') }</span>
-                        { f.passengers.length === 4 && <span>This flight is full!</span> }
-                        <Button
-                            disabled={ f.passengers.length === 4 }
-                            onClick={ () => {
-                                setShowModal(true);
-                                setFlightToJoin(f);
-                            } }
-                        >
-                            Come flying!
-                        </Button>
-                    </div>
-                })
+                upcomingFlights.map(f =>
+                    <Fragment>
+                        <Flight flight={ f }/>
+                            <Button
+                                disabled={ f.passengers.length === 4 }
+                                onClick={ () => {
+                                    setShowModal(true);
+                                    setFlightToJoin(f);
+                                } }
+                            >
+                                Come flying!
+                            </Button>
+                    </Fragment>
+                )
             }
         </div>
     );

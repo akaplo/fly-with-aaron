@@ -11,8 +11,12 @@ export const getFlightsForUser = (userID) => {
     return Promise.resolve(flightsForUser);
 };
 
-export const getUsers = (userIDs) => {
+export const getUsersByID = (userIDs) => {
     return users.filter(u => userIDs.includes(u.id));
+};
+
+export const getAllUsers = () => {
+    return Promise.resolve(users);
 };
 
 export const getAllUpcomingFlights = () => {
@@ -28,25 +32,29 @@ export const getJoinableFlights = (userID) => {
 
 export const joinFlight = (userID, flightID) => {
     return Promise.resolve();
-}
+};
+
+export const createFlight = (flight) => {
+    flight.passengers.push(users[0]);
+};
 
 export const users = [
     {
-        name: 'a',
-        email: 'a',
+        name: 'Aaron',
+        email: 'akaplo@comcast.net',
         id: 1,
         phone: '800-call-aaron',
         admin: true
     },
     {
-        name: 'jon',
+        name: 'Jon Bohrer',
         email: 'jbohrer@vmware.com',
         id: 2,
         phone: '845-802-7811',
         admin: false
     },
     {
-        name: 'sophia',
+        name: 'Sophia Weisman',
         email: 'sweisman@vmware.com',
         id: 3,
         phone: '999-000-1111',
