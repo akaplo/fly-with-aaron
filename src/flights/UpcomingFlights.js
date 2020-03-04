@@ -1,10 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { getFlightsForUser } from "../actions/actions";
 import Flight from "./Flight";
+import { makeStyles } from "@material-ui/core/styles";
+
+const styles = makeStyles({
+    container: {
+        margin: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+    },
+    headerText: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        marginBottom: '1rem',
+        fontWeight: 'bold',
+        fontSize: 'large',
+        marginLeft: '0.5rem'
+    }
+});
 
 const UpcomingFlights = ({ userID }) => {
     const [flights, setFlights] = useState([]);
     const [pastFlights, setPastFlights] = useState([]);
+    const classes = styles();
 
     useEffect(() => {
         getFlightsForUser(userID).then(flights => {
@@ -15,12 +34,14 @@ const UpcomingFlights = ({ userID }) => {
         });
     }, [userID]);
     return (
-        <div>
-            <span>You have { flights.length } upcoming flight(s) with Aaron</span>
-            { flights.map(f => <Flight flight={ f } showAll/>) }
-            <br/><br/>
-            <span>You have taken { pastFlights.length } flight(s) with Aaron</span>
+        <Fragment>
+            <span className={ classes.headerText }>You have { flights.length } upcoming flight(s) with Aaron</span>
+            <div  className={ classes.container }>
+                { flights.map(f => <Flight flight={ f } showAll/>) }
+                <br/><br/>
+                <span>You have taken { pastFlights.length } flight(s) with Aaron</span>
         </div>
+        </Fragment>
     );
 };
 
