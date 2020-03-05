@@ -2,7 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Button } from "@material-ui/core";
 import { getJoinableFlights, joinFlight } from "../actions/actions";
 import { makeStyles } from "@material-ui/core/styles";
-
+import { CognitoAuth } from 'amazon-cognito-auth-js';
+import { initCognitoSDK } from "../login/Login";
 
 const styles = makeStyles(theme => ({
     root: {
@@ -39,9 +40,13 @@ const TopBar = ({ user }) => {
                         Administrator View
                     </Typography>
                 }
-                <Typography className={classes.name} >
-                    { user.name }
-                </Typography>
+                <div>
+                    <Typography className={classes.name} >
+                        { user.name } ({ user.email })
+                    </Typography>
+                    <Button onClick={ () => initCognitoSDK().signOut() }>Logout</Button>
+                </div>
+
             </Toolbar>
         </AppBar>
     );

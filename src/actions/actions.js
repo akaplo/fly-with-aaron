@@ -38,6 +38,10 @@ export const createFlight = (flight) => {
     return Promise.resolve(flight.passengers.push(users[0]));
 };
 
+export const confirmAccessCode = (code) => {
+    return Promise.resolve(code);
+}
+
 export const users = [
     {
         name: 'Aaron',

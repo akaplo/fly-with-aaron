@@ -6,7 +6,10 @@ import CreateFlight from "../flights/CreateFlight";
 import AllFlights from "../flights/AllFlights";
 import Users from "../users/Users";
 import TopBar from "./TopBar";
+import {users} from "../actions/actions";
+
 function Dashboard({ user }) {
+    console.log(user)
     return (
         <div>
             <TopBar user={ user }/>
@@ -31,5 +34,9 @@ function Dashboard({ user }) {
         </div>
     );
 }
+
+Dashboard.defaultProps = {
+    user: users[6]
+};
 
 export default Dashboard;
