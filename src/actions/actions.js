@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 export const login = (email, password) => {
     console.log(email, password);
@@ -5,8 +6,8 @@ export const login = (email, password) => {
     return user ? Promise.resolve(user) : Promise.reject('U SUK');
 };
 
-export const getFlightsForUser = (userID) => {
-    let flightsForUser = flights.filter(f => f.passengers.map(p => p.id).includes(userID));
+export const getFlightsForUser = (user) => {
+    let flightsForUser = flights.filter(f => f.passengers.map(p => p.email).includes(user.email));
 
     return Promise.resolve(flightsForUser);
 };
@@ -24,9 +25,9 @@ export const getAllUpcomingFlights = () => {
 };
 
 // Get the upcoming flights this user isn't already on
-export const getJoinableFlights = (userID) => {
+export const getJoinableFlights = (user) => {
     return getAllUpcomingFlights().then(flights => {
-        return flights.filter(f => !f.passengers.map(p => p.id).includes(userID));
+        return flights.filter(f => !f.passengers.map(p => p.email).includes(user.email));
     });
 };
 
@@ -35,12 +36,13 @@ export const joinFlight = (userID, flightID) => {
 };
 
 export const createFlight = (flight) => {
+    axios.post('/flights', flight);
     return Promise.resolve(flight.passengers.push(users[0]));
 };
 
 export const confirmAccessCode = (code) => {
     return Promise.resolve(code);
-}
+};
 
 export const users = [
     {
@@ -138,6 +140,11 @@ export const users = [
         phone: '999-000-1111',
         admin: false,
         weight: 175
+    },
+    {
+        name: 'VMWARE Aaron',
+        email: 'akaplowitz@vmware.com',
+        phone: '781781781871'
     }
 ];
 
@@ -167,7 +174,7 @@ const flights = [
     {
         flight_date: '2020-03-16T16:30:00.00Z',
         origin: 'Plymouth',
-        passengers: [users[0], users[8], users[5]],
+        passengers: [users[0], users[8], users[5], users[12]],
         id: '5abf'
     },
     {

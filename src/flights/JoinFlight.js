@@ -37,7 +37,7 @@ const styles = makeStyles({
         marginLeft: '0.5rem'
     }
 });
-const JoinFlight = ({ userID }) => {
+const JoinFlight = ({ user }) => {
     const classes = styles();
     const [upcomingFlights, setFlights] = useState([]);
     const [timeWindow, setTimeWindow] = useState('1 month');
@@ -46,7 +46,7 @@ const JoinFlight = ({ userID }) => {
     const [joinFlightError, setJoinFlightError] = useState('');
 
     useEffect(() => {
-        getJoinableFlights(userID).then(flights => {
+        getJoinableFlights(user).then(flights => {
             setFlights(flights);
         });
     }, []);
@@ -58,9 +58,9 @@ const JoinFlight = ({ userID }) => {
                 handleClose={ () => setShowModal(false) }
                 handleSave={ () => {
                     setShowModal(false);
-                    joinFlight(userID, flightToJoin.id).then(() => {
+                    joinFlight(user, flightToJoin.id).then(() => {
                         setFlightToJoin({});
-                        getJoinableFlights(userID);
+                        getJoinableFlights(user);
                     }).catch(() => {
                         setJoinFlightError('Unable to join flight')
                     });

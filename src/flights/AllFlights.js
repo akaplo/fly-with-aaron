@@ -2,14 +2,14 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { getFlightsForUser } from "../actions/actions";
 import Flight from "./Flight";
 
-const AllFlights = ({ userID }) => {
+const AllFlights = ({ user }) => {
     const [flights, setFlights] = useState([]);
 
     useEffect(() => {
-        getFlightsForUser(userID).then(flights => {
+        getFlightsForUser(user).then(flights => {
             setFlights(flights);
         });
-    }, [userID]);
+    }, [user.email]);
     return (
         <div>
             <span>All Past Flights:</span>

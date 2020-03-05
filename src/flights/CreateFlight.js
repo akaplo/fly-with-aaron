@@ -40,7 +40,7 @@ const styles = makeStyles(theme => ({
         width: '30rem'
     }
 }));
-const CreateFlight = ({ userID }) => {
+const CreateFlight = ({ user }) => {
     const classes = styles();
     const [date, setDate] = useState(new Date());
     const [origin, setOrigin] = useState('');
@@ -102,7 +102,7 @@ const CreateFlight = ({ userID }) => {
                         onChange={ e => setPassengers(e.target.value) }
                         input={<Input />}
                     >
-                        { allUsers.filter(u => u.id !== userID).map(u => (
+                        { allUsers.filter(u => u.email !== user.email).map(u => (
                             <MenuItem key={ u.name } value={ u }>
                                 { u.name }
                             </MenuItem>

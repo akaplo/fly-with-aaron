@@ -1,35 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
+import axios from 'axios';
 import { Switch, Route, BrowserRouter as Router, useLocation } from 'react-router-dom';
 import Login from "./login/Login";
-import { login, users } from "./actions/actions";
 import Dashboard from "./dashboard/Dashboard";
 import LoggedOut from "./login/LoggedOut";
+
 const AppNR = ({ }) => {
-    const [ loggedIn, setLoggedIn] = useState(false);
     const [ user, setUser ] = useState(undefined);
-    const [ loginError, setLoginError ] = useState('');
     const location = useLocation();
-    console.log(location);
+    // Set base URL on app bootstrap
+    useEffect(() => {
+        axios.defaults.baseURL = 'https://u61sge0e1j.execute-api.us-east-1.amazonaws.com';
+    }, []);
+    // When URL hash changes, likely means a successful login
     useEffect(() => {
         try {
-            setUser(JSON.parse(atob(location.hash.split('&')[0].split('.')[1])));
+            const authToken = location.hash.split('&')[0].replace('#id_token=', '');
+            axios.defaults.headers.common['Authorization'] = authToken;
+            const user = atob(authToken.split('.')[1]);
+            setUser(JSON.parse(user));
         } catch (e) {
             console.error(e);
         }
-    }, [location.hash])
-    const handleLogin = (uname, pw) => {
-        console.log(uname)
-        login(uname, pw).then(user => {
-            setLoggedIn(true);
-            setUser(user);
-
-        }).catch(err => {
-            setLoggedIn(false);
-            setLoginError(err);
-            setUser({});
-        })
-    };
+    }, [location.hash]);
 
     return (
     <div className="App">
@@ -41,21 +35,13 @@ const AppNR = ({ }) => {
                     (props) =>
                         <Dashboard
                             { ...props }
-                            user={ user }
+                            // user={ user }
                         />
                 }
                 isPrivate
             />
             <Route path={ '/logout' } component={ LoggedOut } />
         </Switch>
-        { loginError }
-        {/*{*/}
-        {/*    !loggedIn && <Login login={ handleLogin }/>*/}
-        {/*}*/}
-        {/*{ loggedIn &&*/}
-        {/*    <Dashboard user={ user }/>*/}
-        {/*}*/}
-
     </div>
   );
 };

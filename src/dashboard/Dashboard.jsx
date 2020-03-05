@@ -16,17 +16,17 @@ function Dashboard({ user }) {
             { !user.admin &&
                 <Fragment>
                     <br/><br/>
-                    <UpcomingFlights userID={user.id}/>
+                    <UpcomingFlights user={user}/>
                     <br/>
-                    <JoinFlight userID={user.id}/>
+                    <JoinFlight user={user}/>
                 </Fragment>
             }
             <br/>
             { user.admin &&
                 <Fragment>
-                    <CreateFlight userID={ user.id }/>
+                    <CreateFlight user={ user }/>
                     <hr/>
-                    <AllFlights userID={ user.id }/>
+                    <AllFlights user={ user }/>
                     <hr/>
                     <Users/>
                 </Fragment>
@@ -36,7 +36,7 @@ function Dashboard({ user }) {
 }
 
 Dashboard.defaultProps = {
-    user: users[6]
+    user: users[0]
 };
 
 export default Dashboard;

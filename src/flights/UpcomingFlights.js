@@ -20,19 +20,19 @@ const styles = makeStyles({
     }
 });
 
-const UpcomingFlights = ({ userID }) => {
+const UpcomingFlights = ({ user }) => {
     const [flights, setFlights] = useState([]);
     const [pastFlights, setPastFlights] = useState([]);
     const classes = styles();
 
     useEffect(() => {
-        getFlightsForUser(userID).then(flights => {
+        getFlightsForUser(user).then(flights => {
             const futureFlights = flights.filter(f => new Date(f.flight_date) > new Date());
             const pastFlights = flights.filter(f => new Date(f.flight_date) < new Date());
             setFlights(futureFlights);
             setPastFlights(pastFlights);
         });
-    }, [userID]);
+    }, [user.email]);
     return (
         <Fragment>
             <span className={ classes.headerText }>You have { flights.length } upcoming flight(s) with Aaron</span>
