@@ -53,11 +53,13 @@ const JoinFlight = ({ flights, refreshUser, user }) => {
                 handleClose={ () => setShowModal(false) }
                 handleSave={ () => {
                     setShowModal(false);
+                    console.log(user, flightToJoin)
                     joinFlight(user, flightToJoin.id).then(() => {
                         setFlightToJoin({});
-                        refreshUser();
-                    }).catch(() => {
-                        setJoinFlightError('Unable to join flight')
+                        refreshUser(user.email);
+                    }).catch((e) => {
+                        console.error(e)
+                        setJoinFlightError('Unable to join flight ' + e)
                     });
                 }}
             />

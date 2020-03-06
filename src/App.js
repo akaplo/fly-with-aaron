@@ -14,8 +14,15 @@ const AppNR = () => {
     const [flights, setFlights] = useState([]);
     const location = useLocation();
     const updateUser = (email, userToMutate={}) => getUser(email).then(u => {
-        setUser({ ...userToMutate, ...u });
+        const updatedUser = { ...userToMutate, ...u };
+        setUser(updatedUser);
+        if (flights.length > 0) {
+            setUser(addFlightDataToUser(updatedUser, flights))
+        } else {
+            setUser(updatedUser);
+        }
         return Promise.resolve({ ...userToMutate, ...u });
+
     });
     const updateFlights = () => getAllFlights().then(res => {
         setFlights(res.data.Items);
@@ -53,7 +60,7 @@ const AppNR = () => {
                             { ...props }
                             flights={ flights }
                             getFlights={ updateFlights }
-                            getUser={ updateUser }
+                            refreshUser={ updateUser }
                             user={ user }
                         />
                 }
