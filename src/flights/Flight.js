@@ -25,14 +25,14 @@ const styles = makeStyles({
 });
 
 const Flight = ({ flight, showAll }) => {
-    const date = moment(flight.flight_date);
+    const date = moment(flight.flight_datetime);
     const isFull = flight.passengers.length === 4;
     const classes = styles({ isFull });
     return (
         <div className={ classes.container }>
             { isFull && <div className={ classes.flex }>This flight is full!</div> }
             <div className={ classes.title }>{ flight.origin } -> { flight.destination || 'TBD' }</div>
-            <div className={ classes.date }>{ date.format('dddd, MMMM Do') }, { date.format('h:mm:ss a') }</div>
+            <div className={ classes.date }>{ date.format('dddd, MMMM Do YYYY') }, { date.format('h:mm:ss a') }</div>
 
             <span className={ classes.flex }>With { showAll ? flight.passengers.map(p => p.name).join(', ') : `Aaron and ${ flight.passengers.length - 1 } other(s)`}</span>
             { showAll && flight.cost && <div className={ classes.flex }>Cost: { flight.cost }</div>}

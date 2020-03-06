@@ -6,17 +6,16 @@ import Login from "./login/Login";
 import Dashboard from "./dashboard/Dashboard";
 import LoggedOut from "./login/LoggedOut";
 
-const AppNR = ({ }) => {
+const AppNR = () => {
+    // Set base URL on app bootstrap
+    axios.defaults.baseURL = 'https://u61sge0e1j.execute-api.us-east-1.amazonaws.com';
     const [ user, setUser ] = useState(undefined);
     const location = useLocation();
-    // Set base URL on app bootstrap
-    useEffect(() => {
-        axios.defaults.baseURL = 'https://u61sge0e1j.execute-api.us-east-1.amazonaws.com';
-    }, []);
     // When URL hash changes, likely means a successful login
     useEffect(() => {
         try {
             const authToken = location.hash.split('&')[0].replace('#id_token=', '');
+            console.log(authToken);
             axios.defaults.headers.common['Authorization'] = authToken;
             const user = atob(authToken.split('.')[1]);
             setUser(JSON.parse(user));
@@ -35,7 +34,7 @@ const AppNR = ({ }) => {
                     (props) =>
                         <Dashboard
                             { ...props }
-                            // user={ user }
+                            user={ { ...user, admin: user && user.email === 'akaplo@comcast.net'} }
                         />
                 }
                 isPrivate

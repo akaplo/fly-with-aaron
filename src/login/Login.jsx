@@ -1,7 +1,6 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, { Fragment, useState} from 'react';
 import { Button, Input } from "@material-ui/core";
 import { CognitoAuth } from 'amazon-cognito-auth-js';
-import TextField from "@material-ui/core/TextField";
 import { confirmAccessCode } from "../actions/actions";
 
 export const initCognitoSDK = () => {
@@ -18,8 +17,8 @@ export const initCognitoSDK = () => {
     // You can also set state parameter
     // auth.setState(<state parameter>);
     auth.userhandler = {
-        onSuccess: () => {},
-        onFailure: () => {}
+        onSuccess: () => console.log('successful login'),
+        onFailure: () => console.error('failed login?')
         /** E.g.
          onSuccess: function(result) {
 				alert("Sign in success");
@@ -35,31 +34,10 @@ export const initCognitoSDK = () => {
 };
 
 const CognitoLogin = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('')
     let auth;
     auth = initCognitoSDK();
     auth.getSession();
-    return (
-        <div>
-            Great! Redirecting to alt login...
-            {/*<form noValidate autoComplete="off">*/}
-            {/*    <Input*/}
-            {/*        placeholder={ 'example@aaron.com' }*/}
-            {/*        inputProps={{ 'aria-label': 'description' }}*/}
-            {/*        onChange={ e => setEmail(e.target.value) }*/}
-            {/*        value={ email }*/}
-            {/*    />*/}
-            {/*    <Input*/}
-            {/*        inputProps={{ 'aria-label': 'description' }}*/}
-            {/*        onChange={ e => setPassword(e.target.value) }*/}
-            {/*        type={ 'password' }*/}
-            {/*        value={ password }*/}
-            {/*    />*/}
-            {/*</form>*/}
-            {/*<Button onClick={ () => login(email, password) } variant={ 'outlined'  }>Log In</Button>*/}
-        </div>
-    );
+    return null;
 };
 
 const ConfirmCode = ({ onConfirm }) => {

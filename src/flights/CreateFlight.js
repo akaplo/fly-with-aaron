@@ -49,7 +49,7 @@ const CreateFlight = ({ user }) => {
     const [allUsers, setAllUsers] = useState([]);
     const [showCreateModal, setShowModal] = useState(false);
     const [createFlightError, setCreateFlightError] = useState('');
-    const flight = { flight_date: date, origin, destination, passengers };
+    const flight = { flight_datetime: date, origin, destination, passengers };
     useEffect(() => {
         getAllUsers().then(setAllUsers);
     }, []);
@@ -129,8 +129,8 @@ const CreateFlightModal = ({ open, handleClose, handleSave, flight }) => (
         <DialogContent>
             <DialogContentText>
                 { flight.origin} to { flight.destination }<br/>
-                { moment(flight.flight_date).format('dddd, MMMM Do') }<br/>
-                With { flight.passengers.map(p => p.name).join(', ') || '\<nobody\>'}
+                { moment(flight.flight_datetime).format('dddd, MMMM Do') }<br/>
+                With { flight.passengers.map(p => p.name).join(', ') || '<nobody>'}
             </DialogContentText>
         </DialogContent>
         <DialogActions>

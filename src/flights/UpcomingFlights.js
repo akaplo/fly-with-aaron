@@ -26,20 +26,22 @@ const UpcomingFlights = ({ user }) => {
     const classes = styles();
 
     useEffect(() => {
-        getFlightsForUser(user).then(flights => {
-            const futureFlights = flights.filter(f => new Date(f.flight_date) > new Date());
-            const pastFlights = flights.filter(f => new Date(f.flight_date) < new Date());
-            setFlights(futureFlights);
-            setPastFlights(pastFlights);
-        });
+        if (user.email) {
+            getFlightsForUser(user).then(flights => {
+                const futureFlights = flights.filter(f => new Date(f.flight_datetime) > new Date());
+                const pastFlights = flights.filter(f => new Date(f.flight_datetime) < new Date());
+                setFlights(futureFlights);
+                setPastFlights(pastFlights);
+            });
+        }
     }, [user.email]);
     return (
         <Fragment>
-            <span className={ classes.headerText }>You have { flights.length } upcoming flight(s) with Aaron</span>
+            <span className={ classes.headerText }>Your upcoming flight(s)</span>
             <div  className={ classes.container }>
-                { flights.map(f => <Flight flight={ f } showAll/>) }
+                { flights.map(f => <Flight flight={ f } key={ f.id } showAll/>) }
                 <br/><br/>
-                <span>You have taken { pastFlights.length } flight(s) with Aaron</span>
+                <span>{ pastFlights.length } flight(s) taken.</span>
         </div>
         </Fragment>
     );

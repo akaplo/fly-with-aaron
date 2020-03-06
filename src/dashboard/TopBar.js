@@ -1,8 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Button } from "@material-ui/core";
-import { getJoinableFlights, joinFlight } from "../actions/actions";
+import React from 'react';
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { CognitoAuth } from 'amazon-cognito-auth-js';
 import { initCognitoSDK } from "../login/Login";
 
 const styles = makeStyles(theme => ({
@@ -51,29 +49,5 @@ const TopBar = ({ user }) => {
         </AppBar>
     );
 };
-//
-// const ComeFlyingModal = ({ open, handleClose, handleSave, flight }) => (
-//     <Dialog
-//         open={open}
-//         onClose={handleClose}
-//     >
-//         <DialogTitle>{"Join this flight?"}</DialogTitle>
-//         <DialogContent>
-//             <DialogContentText>
-//                 Confirm that you'd like to join this flight:
-//                 { flight.origin} to { flight.destination }<br/>
-//                 { moment(flight.flight_date).format('dddd, MMMM Do') }
-//             </DialogContentText>
-//         </DialogContent>
-//         <DialogActions>
-//             <Button onClick={handleClose} color="primary">
-//                 Nevermind
-//             </Button>
-//             <Button onClick={handleSave} color="primary" autoFocus>
-//                 Join Flight
-//             </Button>
-//         </DialogActions>
-//     </Dialog>
-// );
 
 export default TopBar;

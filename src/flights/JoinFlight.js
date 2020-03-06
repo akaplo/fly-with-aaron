@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Input, Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent, Tooltip } from "@material-ui/core";
+import React, { useEffect, useState } from 'react';
+import { Button, Dialog, DialogTitle, DialogContentText, DialogActions, DialogContent, Tooltip } from "@material-ui/core";
 import { Alert } from '@material-ui/lab'
 import { getJoinableFlights, joinFlight } from "../actions/actions";
 import moment from 'moment';
@@ -40,16 +40,17 @@ const styles = makeStyles({
 const JoinFlight = ({ user }) => {
     const classes = styles();
     const [upcomingFlights, setFlights] = useState([]);
-    const [timeWindow, setTimeWindow] = useState('1 month');
     const [flightToJoin, setFlightToJoin] = useState({});
     const [showComeFlyingModal, setShowModal] = useState(false);
     const [joinFlightError, setJoinFlightError] = useState('');
 
     useEffect(() => {
-        getJoinableFlights(user).then(flights => {
-            setFlights(flights);
-        });
-    }, []);
+        if (user.email) {
+            getJoinableFlights(user).then(flights => {
+                setFlights(flights);
+            });
+        }
+    }, [user.email]);
     return (
         <div className={ classes.container }>
             <ComeFlyingModal
@@ -60,7 +61,7 @@ const JoinFlight = ({ user }) => {
                     setShowModal(false);
                     joinFlight(user, flightToJoin.id).then(() => {
                         setFlightToJoin({});
-                        getJoinableFlights(user);
+                        getJoinableFlights(user).catch(e => console.error(e));
                     }).catch(() => {
                         setJoinFlightError('Unable to join flight')
                     });
@@ -72,19 +73,19 @@ const JoinFlight = ({ user }) => {
             </span>
             {
                 upcomingFlights.map(f => {
-                    const daysUntilFlight = (new Date(f.flight_date) - new Date())/1000/60/60/24;
+                    const daysUntilFlight = (new Date(f.flight_datetime) - new Date())/1000/60/60/24;
                     const isFull = f.passengers.length === 4;
-                    return <div className={classes.flightContainer}>
+                    return <div className={classes.flightContainer} key={ f.id }>
                         <div className={ classes.left }>
                             <Flight flight={f}/>
                         </div>
                         {
                             daysUntilFlight < 3 && !isFull &&
-                            <div className={ classes.soonWarning }><Alert severity="warning">We need { 4 - f.passengers.length } more!</Alert></div>
+                            <div className={ classes.soonWarning }><Alert severity="warning">HELP! We need { 4 - f.passengers.length } more!</Alert></div>
                         }
                         {
                             daysUntilFlight <= 5 && daysUntilFlight > 3 && !isFull &&
-                            <div className={ classes.soonWarning }><Alert severity="info">Happening real soon, join us!</Alert></div>
+                            <div className={ classes.soonWarning }><Alert severity="info">Happening soon, join us!</Alert></div>
                         }
                         {
                             f.passengers.length < 3 && daysUntilFlight > 5 && daysUntilFlight < 10 &&
@@ -122,9 +123,8 @@ const ComeFlyingModal = ({ open, handleClose, handleSave, flight }) => (
         <DialogTitle>{"Join this flight?"}</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                Confirm that you'd like to join this flight:
-                { flight.origin} to { flight.destination }<br/>
-                { moment(flight.flight_date).format('dddd, MMMM Do') }
+                Confirm that you'd like to join this flight: { flight.origin || 'TBD' } to { flight.destination || 'TBD' }<br/>
+                { moment(flight.flight_datetime).format('dddd, MMMM Do') }
             </DialogContentText>
         </DialogContent>
         <DialogActions>

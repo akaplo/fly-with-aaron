@@ -6,16 +6,14 @@ import {
     Button,
     Dialog,
     DialogTitle,
-    DialogContent, IconButton,
-    DialogContentText, DialogActions, List, ListItem, ListItemText
+    DialogContent,
+    DialogContentText, DialogActions, List, ListItem
 } from "@material-ui/core";
-import {createFlight, getAllUsers } from "../actions/actions";
-import moment from 'moment';
-import { ArrowRight } from "@material-ui/icons";
+import { getAllUsers } from "../actions/actions";
 import User from "./User";
 import UpcomingFlights from "../flights/UpcomingFlights";
 
-const Users = ({ userID }) => {
+const Users = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [showUserModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState({});
@@ -59,10 +57,10 @@ const UserViewModal = ({ open, handleClose, user }) => (
         open={open}
         onClose={handleClose}
     >
-        <DialogTitle>{ user.name }</DialogTitle>
+        <DialogTitle>Viewing <b>{ user.name }</b></DialogTitle>
         <DialogContent>
             <DialogContentText>
-                <UpcomingFlights userID={ user.id }/>
+                <UpcomingFlights user={ user }/>
             </DialogContentText>
         </DialogContent>
         <DialogActions>
