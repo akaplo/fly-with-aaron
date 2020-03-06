@@ -1,31 +1,41 @@
 import axios from 'axios';
 
-const getAllFlights = () => axios.get('/flights');
+export const getAllFlights = () => axios.get('/flights');
 
-export const getFlightsForUser = (user) =>
-    getAllFlights().then(res =>
-        res.data.Items.filter(f => f.passengers.map(p => p.email).includes(user.email))
-    );
+export const getFlightsForUser = (user, allFlights) =>
+    allFlights.filter(f => f.passengers.map(p => p.email).includes(user.email));
 
-export const getAllUsers = () => {
-    return Promise.resolve(users);
-};
+export const getAllUsers = () => axios.get('/users').then(res => res.data.Items);
 
-export const getAllUpcomingFlights = () => (
-    getAllFlights().then(res => {
-        return res.data.Items.filter(f => new Date(f.flight_datetime) > new Date())
-    })
+export const getUser = (email) => axios.get(`/users/${ email }`).then(res => res.data.Item).catch(e => console.error(e));
+
+export const addFlightDataToUser = (user, flights) => ({
+    ...user,
+    flights: flights.filter(f => user.flights.includes(f.id))
+});
+
+export const getUpcomingFlights = (flights) => (
+    flights.filter(f => new Date(f.flight_datetime) > new Date())
 );
 
-// Get the upcoming flights this user isn't already on
-export const getJoinableFlights = (user) => {
-    return getAllUpcomingFlights().then(flights => {
-        return flights.filter(f => !f.passengers.map(p => p.email).includes(user.email));
-    });
+export const editUser = (email, phone, weight, flights) => {
+
 };
 
-export const joinFlight = (userID, flightID) => {
-    return Promise.resolve();
+// Get the upcoming flights this user isn't already on
+export const getJoinableFlights = (userFlights, allFlights) => {
+    // Return all flights whose IDs are NOT in this user's list of flights
+    return getUpcomingFlights(allFlights).filter(f => !userFlights.map(fl => fl.id).includes(f.id));
+};
+
+export const joinFlight = (user, flightID) => {
+    if (!user.flights.includes(flightID)) {
+        return axios.put(`/users/${ user.email }`, {
+            flights: user.flights.map(f => f.id).concat([flightID])
+        });
+    } else {
+        return Promise.reject('User already on flight');
+    }
 };
 
 export const createFlight = (flight) => {
@@ -39,6 +49,7 @@ export const createFlight = (flight) => {
         "weight": 160
     }));
 };
+
 
 export const confirmAccessCode = (code) => {
     return Promise.resolve(code);

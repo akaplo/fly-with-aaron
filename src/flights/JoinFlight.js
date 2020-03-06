@@ -37,20 +37,14 @@ const styles = makeStyles({
         marginLeft: '0.5rem'
     }
 });
-const JoinFlight = ({ user }) => {
+const JoinFlight = ({ flights, refreshUser, user }) => {
     const classes = styles();
-    const [upcomingFlights, setFlights] = useState([]);
+    console.log(flights);
+    const upcomingFlights = getJoinableFlights(user.flights || [], flights);
     const [flightToJoin, setFlightToJoin] = useState({});
     const [showComeFlyingModal, setShowModal] = useState(false);
     const [joinFlightError, setJoinFlightError] = useState('');
 
-    useEffect(() => {
-        if (user.email) {
-            getJoinableFlights(user).then(flights => {
-                setFlights(flights);
-            });
-        }
-    }, [user.email]);
     return (
         <div className={ classes.container }>
             <ComeFlyingModal
@@ -61,7 +55,7 @@ const JoinFlight = ({ user }) => {
                     setShowModal(false);
                     joinFlight(user, flightToJoin.id).then(() => {
                         setFlightToJoin({});
-                        getJoinableFlights(user).catch(e => console.error(e));
+                        refreshUser();
                     }).catch(() => {
                         setJoinFlightError('Unable to join flight')
                     });
@@ -137,5 +131,12 @@ const ComeFlyingModal = ({ open, handleClose, handleSave, flight }) => (
         </DialogActions>
     </Dialog>
 );
+
+JoinFlight.defaultProps = {
+    flights: [],
+    user: {
+        flights: []
+    }
+};
 
 export default JoinFlight;

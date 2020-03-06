@@ -6,7 +6,7 @@ import AllFlights from "../flights/AllFlights";
 import Users from "../users/Users";
 import TopBar from "./TopBar";
 
-function Dashboard({ user }) {
+function Dashboard({ flights, getFlights, getUser, user }) {
     return (
         <div>
             <TopBar user={ user }/>
@@ -15,11 +15,11 @@ function Dashboard({ user }) {
                     <br/><br/>
                     <UpcomingFlights user={user}/>
                     <br/>
-                    <JoinFlight user={user}/>
+                    <JoinFlight flights={ flights } user={user}/>
                 </Fragment>
             }
             <br/>
-            { user.admin &&
+            { user.admin === true &&
                 <Fragment>
                     <CreateFlight user={ user }/>
                     <hr/>

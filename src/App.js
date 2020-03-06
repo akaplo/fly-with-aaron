@@ -5,25 +5,42 @@ import { Switch, Route, BrowserRouter as Router, useLocation } from 'react-route
 import Login from "./login/Login";
 import Dashboard from "./dashboard/Dashboard";
 import LoggedOut from "./login/LoggedOut";
+import {addFlightDataToUser, getAllFlights, getFlightsForUser, getUser} from "./actions/actions";
 
 const AppNR = () => {
     // Set base URL on app bootstrap
     axios.defaults.baseURL = 'https://u61sge0e1j.execute-api.us-east-1.amazonaws.com';
     const [ user, setUser ] = useState(undefined);
+    const [flights, setFlights] = useState([]);
     const location = useLocation();
+    const updateUser = (email, userToMutate={}) => getUser(email).then(u => {
+        setUser({ ...userToMutate, ...u });
+        return Promise.resolve({ ...userToMutate, ...u });
+    });
+    const updateFlights = () => getAllFlights().then(res => {
+        setFlights(res.data.Items);
+        return Promise.resolve(res.data.Items);
+    });
+    const updateUserWithFlights = (email, userToMutate={}) => {
+      const userPromise = updateUser(email, userToMutate);
+      const flightPromise = updateFlights();
+      return Promise.all([userPromise, flightPromise])
+          .then((reses) => {
+              console.log(reses[0])
+              setUser(addFlightDataToUser(reses[0], reses[1]))
+          })
+    };
     // When URL hash changes, likely means a successful login
     useEffect(() => {
         try {
             const authToken = location.hash.split('&')[0].replace('#id_token=', '');
-            console.log(authToken);
             axios.defaults.headers.common['Authorization'] = authToken;
-            const user = atob(authToken.split('.')[1]);
-            setUser(JSON.parse(user));
+            const user = JSON.parse(atob(authToken.split('.')[1]));
+            updateUserWithFlights(user.email, user).catch(e => console.error(e));
         } catch (e) {
             console.error(e);
         }
     }, [location.hash]);
-
     return (
     <div className="App">
         <Switch>
@@ -34,7 +51,10 @@ const AppNR = () => {
                     (props) =>
                         <Dashboard
                             { ...props }
-                            user={ { ...user, admin: user && user.email === 'akaplo@comcast.net'} }
+                            flights={ flights }
+                            getFlights={ updateFlights }
+                            getUser={ updateUser }
+                            user={ user }
                         />
                 }
                 isPrivate
