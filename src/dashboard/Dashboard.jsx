@@ -23,9 +23,9 @@ function Dashboard({ flights, getFlights, refreshUser, user }) {
                 <Fragment>
                     <CreateFlight user={ user }/>
                     <hr/>
-                    <AllFlights user={ user }/>
+                    <AllFlights flights={ flights } user={ user }/>
                     <hr/>
-                    <Users/>
+                    <Users flights={ flights }/>
                 </Fragment>
             }
         </div>
@@ -33,7 +33,8 @@ function Dashboard({ flights, getFlights, refreshUser, user }) {
 }
 
 Dashboard.defaultProps = {
-    user: {}
+    user: {},
+    flights: []
 };
 
 export default Dashboard;

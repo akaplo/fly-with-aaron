@@ -1,5 +1,5 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
+import React, { useState } from 'react';
+import { AppBar, Toolbar, Typography, Button, Menu, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { initCognitoSDK } from "../login/Login";
 
@@ -22,10 +22,28 @@ const styles = makeStyles(theme => ({
             marginLeft: theme.spacing(1),
             width: 'auto',
         },
+        color: '#fff'
+    },
+    email: {
+        fontStyle: 'italic',
+        color: 'grey'
     }
 }));
 const TopBar = ({ user }) => {
     const classes = styles();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleMenu = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        initCognitoSDK().signOut();
+    };
 
     return (
         <AppBar position="static">
@@ -39,10 +57,30 @@ const TopBar = ({ user }) => {
                     </Typography>
                 }
                 <div>
-                    <Typography className={classes.name} >
-                        { user.name } ({ user.email })
-                    </Typography>
-                    <Button onClick={ () => initCognitoSDK().signOut() }>Logout</Button>
+                    <Button
+                        onClick={ handleMenu }
+                    >
+                        <Typography className={classes.name} >
+                            <span>{ user.name }</span>
+                        </Typography>
+                    </Button>
+                    <Menu
+                        anchorEl={ anchorEl }
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={ Boolean(anchorEl) }
+                        onClose={ handleClose }
+                    >
+                        <MenuItem onClick={ handleClose }><span className={ classes.email }>{ user.email }</span></MenuItem>
+                        <MenuItem onClick={ handleClose }><span onClick={ handleLogout }>Logout</span></MenuItem>
+                    </Menu>
                 </div>
 
             </Toolbar>

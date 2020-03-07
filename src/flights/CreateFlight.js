@@ -53,7 +53,7 @@ const CreateFlight = ({ user }) => {
     useEffect(() => {
         getAllUsers().then(setAllUsers);
     }, []);
-
+    console.log(allUsers)
     return (
         <MuiPickersUtilsProvider utils={ MomentUtils }>
             <div className={ classes.container }>
@@ -64,7 +64,7 @@ const CreateFlight = ({ user }) => {
                     handleSave={ () => {
                         setShowModal(false);
                         createFlight(flight).catch(() => {
-                            setCreateFlightError('Unable to join flight')
+                            setCreateFlightError('Unable to create flight')
                         });
                     }}
                 />

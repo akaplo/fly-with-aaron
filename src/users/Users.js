@@ -9,11 +9,11 @@ import {
     DialogContent,
     DialogContentText, DialogActions, List, ListItem
 } from "@material-ui/core";
-import { getAllUsers } from "../actions/actions";
+import {addFlightDataToUser, getAllUsers} from "../actions/actions";
 import User from "./User";
 import UpcomingFlights from "../flights/UpcomingFlights";
 
-const Users = () => {
+const Users = ({ flights }) => {
     const [allUsers, setAllUsers] = useState([]);
     const [showUserModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState({});
@@ -25,6 +25,7 @@ const Users = () => {
         <div>
             <b><i>All Users</i></b>
             <UserViewModal
+                flights={ flights }
                 user={ selectedUser }
                 open={ showUserModal}
                 handleClose={ () => setShowModal(false) }
@@ -52,7 +53,7 @@ const Users = () => {
     );
 };
 
-const UserViewModal = ({ open, handleClose, user }) => (
+const UserViewModal = ({ flights, open, handleClose, user }) => (
     <Dialog
         open={open}
         onClose={handleClose}
@@ -60,7 +61,7 @@ const UserViewModal = ({ open, handleClose, user }) => (
         <DialogTitle>Viewing <b>{ user.name }</b></DialogTitle>
         <DialogContent>
             <DialogContentText>
-                <UpcomingFlights user={ user }/>
+                <UpcomingFlights user={ addFlightDataToUser(user, flights) }/>
             </DialogContentText>
         </DialogContent>
         <DialogActions>
