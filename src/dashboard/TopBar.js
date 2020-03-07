@@ -24,9 +24,8 @@ const styles = makeStyles(theme => ({
         },
         color: '#fff'
     },
-    email: {
-        fontStyle: 'italic',
-        color: 'grey'
+    logout: {
+        width: '100%'
     }
 }));
 const TopBar = ({ user }) => {
@@ -78,8 +77,9 @@ const TopBar = ({ user }) => {
                         open={ Boolean(anchorEl) }
                         onClose={ handleClose }
                     >
-                        <MenuItem onClick={ handleClose }><span className={ classes.email }>{ user.email }</span></MenuItem>
-                        <MenuItem onClick={ handleClose }><span onClick={ handleLogout }>Logout</span></MenuItem>
+                        <MenuItem disabled onClick={ handleClose }>{ user.email || 'Not logged in' }</MenuItem>
+                        <MenuItem disabled onClick={ handleClose }>{ user.weight + 'lbs' || 'Missing weight' }</MenuItem>
+                        <MenuItem onClick={ handleClose }><span className={ classes.logout } onClick={ handleLogout }>Logout</span></MenuItem>
                     </Menu>
                 </div>
 

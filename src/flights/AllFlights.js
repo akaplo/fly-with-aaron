@@ -1,31 +1,71 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Flight from "./Flight";
+import { sortFlights } from "../actions/actions";
+import { IconButton } from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ListItem from "@material-ui/core/ListItem";
+import Divider from '@material-ui/core/Divider';
+import { makeStyles } from "@material-ui/core/styles";
+import { CreateFlightModalWrapper } from "./CreateFlight";
+import {DeleteFlightModal} from "./DeleteFlightModal";
+
+const styles = makeStyles({
+    actions: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    flightContainer: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    }
+});
 
 const AllFlights = ({ flights, user }) => {
+    const classes = styles();
+    const [flightToDelete, setFlightToDelete] = useState(undefined);
+    const [flightToEdit, setFlightToEdit] = useState(undefined);
+    const pastFlights = sortFlights(flights.filter(f => new Date(f.flight_datetime) < new Date()));
+    const futureFlights = sortFlights(flights.filter(f => new Date(f.flight_datetime) > new Date()));
     return (
         <div>
             <span>All Past Flights:</span>
-            { flights
-                .filter(f => new Date(f.flight_datetime) < new Date())
-                .sort((a, b) => {
-                    const aDate = new Date(a.flight_datetime);
-                    const bDate = new Date(b.flight_datetime);
-                    if (aDate < bDate) return -1;
-                    if (aDate > bDate) return 1;
-                    return 0;
-                })
+            <CreateFlightModalWrapper
+                flight={ flightToEdit }
+                user={ user }
+                open={ !!flightToEdit }
+                handleClose={ () => setFlightToEdit(undefined) }
+            />
+            <DeleteFlightModal
+                flight={ flightToDelete }
+                handleClose={ () => setFlightToDelete(undefined) }
+                open={ !!flightToDelete }
+            />
+            { pastFlights
                 .map(f =>
                     <Fragment>
-                        <div key={ f.id }>---------------------------------</div>
-                        <Flight flight={f} key={ f.id } showAll={true}/>
+                        <Divider/>
+                        <div className={ classes.flightContainer }>
+                            <Flight flight={f} key={ f.id } showAll={ true }/>
+                            <div className={ classes.actions }>
+                                <IconButton onClick={ () => setFlightToEdit(f) }><EditIcon/></IconButton>
+                                <IconButton onClick={ () => setFlightToDelete(f) }><DeleteIcon/></IconButton>
+                            </div>
+                        </div>
                     </Fragment>
             ) }
             <hr/>
             <span>All Upcoming Flight(s)</span>
-            { flights.filter(f => new Date(f.flight_datetime) > new Date()).map(f =>
+            { futureFlights.filter(f => new Date(f.flight_datetime) > new Date()).map(f =>
                 <Fragment>
-                    <div key={ f.id }>---------------------------------</div>
-                    <Flight flight={ f } key={ f.id } showAll={ true }/>
+                    <Divider/>
+                    <div className={ classes.flightContainer }>
+                        <Flight flight={ f } key={ f.id } showAll={ true }/>
+                        <div className={ classes.actions }>
+                            <IconButton onClick={ () => setFlightToEdit(f) }><EditIcon/></IconButton>
+                            <IconButton onClick={ () => setFlightToDelete(f) }><DeleteIcon/></IconButton>
+                        </div>
+                    </div>
                 </Fragment>
             ) }
         </div>

@@ -23,6 +23,14 @@ export const editUser = (email, phone, weight, flights) => {
 
 };
 
+export const editFlight = (flight, id) => {
+    axios.put(`flights/${ id }`, flight)
+};
+
+export const deleteFlight = (id) => {
+    axios.delete(`flights/${ id }`)
+};
+
 // Get the upcoming flights this user isn't already on
 export const getJoinableFlights = (userFlights, allFlights) => {
     // Return all flights whose IDs are NOT in this user's list of flights
@@ -41,6 +49,14 @@ export const joinFlight = (user, flightID) => {
 
 export const createFlight = (flight) => axios.post('/flights', flight);
 
-export const confirmAccessCode = (code) => {
-    return Promise.resolve(code);
-};
+export const sortFlights = (flights) => flights.sort((a, b) => {
+    const aDate = new Date(a.flight_datetime);
+    const bDate = new Date(b.flight_datetime);
+    if (aDate < bDate) return -1;
+    if (aDate > bDate) return 1;
+    return 0;
+});
+
+export const arraysAreEqual = (a1=[], a2=[]) => a1.length === a2.length && a1.sort().every(function(value, index) { return value === a2.sort()[index]});
+
+export const confirmAccessCode = code => axios.get(`/code_validation/${ code }`);

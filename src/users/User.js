@@ -5,14 +5,12 @@ const styles = makeStyles({
     root: {
         display: 'flex',
         justifyContent: 'space-between',
-        width: '100%',
-        fontStyle: props => props.admin ? 'italic' : 'normal',
-        color: props => props.admin ? 'grey' : 'black'
+        width: '100%'
     }
 });
 const User = ({ user }) => {
     console.log(user.admin)
-    const classes = styles({admin: user.admin });
+    const classes = styles();
     return (
         <div className={ classes.root }>
             { user.admin && <span>(Administrator)</span> }

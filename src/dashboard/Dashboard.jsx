@@ -21,6 +21,7 @@ function Dashboard({ flights, getFlights, refreshUser, user }) {
             <br/>
             { user.admin === true &&
                 <Fragment>
+                    <div>Manually Add Flight</div>
                     <CreateFlight user={ user }/>
                     <hr/>
                     <AllFlights flights={ flights } user={ user }/>

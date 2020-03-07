@@ -38,6 +38,7 @@ const Users = ({ flights }) => {
                 }).map(u =>
                     <ListItem
                         button
+                        disabled={ u.admin }
                         onClick={ () => {
                             if (!u.admin) {
                                 setSelectedUser(u);

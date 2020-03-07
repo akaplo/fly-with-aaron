@@ -46,13 +46,11 @@ const ConfirmCode = ({ onConfirm }) => {
     return (
         <div>
             <div>Enter your access code:</div>
-            <form noValidate autoComplete="off" onSubmit={ handleSubmit }>
-                <Input
-                    inputProps={{ 'aria-label': 'secret code' }}
-                    onChange={ e => setCode(e.target.value) }
-                    value={ code }
-                />
-            </form>
+            <Input
+                inputProps={{ 'aria-label': 'secret code' }}
+                onChange={ e => setCode(e.target.value) }
+                value={ code }
+            />
             <Button
                 onClick={ handleSubmit }
                 variant={ 'outlined'  }>

@@ -11,7 +11,7 @@ import {
     DialogContent,
     DialogContentText, DialogActions
 } from "@material-ui/core";
-import {createFlight, getAllUsers } from "../actions/actions";
+import {createFlight, getAllUsers, editFlight, arraysAreEqual} from "../actions/actions";
 import moment from 'moment';
 import { makeStyles } from "@material-ui/core/styles";
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
@@ -40,36 +40,45 @@ const styles = makeStyles(theme => ({
         width: '30rem'
     }
 }));
-const CreateFlight = ({ user }) => {
+const CreateFlight = ({ flight, user }) => {
     const classes = styles();
     const [date, setDate] = useState(new Date());
-    const [origin, setOrigin] = useState('');
+    const [origin, setOrigin] = useState('Plymouth');
     const [destination, setDestination] = useState('');
     const [passengers, setPassengers] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [showCreateModal, setShowModal] = useState(false);
     const [createFlightError, setCreateFlightError] = useState('');
-    const flight = { flight_datetime: date, origin, destination, passengers };
     useEffect(() => {
         getAllUsers().then(setAllUsers);
-    }, []);
-    console.log(allUsers)
+        if (flight) {
+            setDate(flight.flight_datetime);
+            setOrigin(flight.origin);
+            setDestination(flight.destination);
+            setPassengers(flight.passengers);
+        }
+    }, [flight]);
     return (
         <MuiPickersUtilsProvider utils={ MomentUtils }>
             <div className={ classes.container }>
-                <CreateFlightModal
-                    flight={ flight }
+                <ConfirmationModal
+                    flight={ { flight_datetime: date, origin, destination, passengers } }
                     open={ showCreateModal}
                     handleClose={ () => setShowModal(false) }
                     handleSave={ () => {
                         setShowModal(false);
-                        createFlight(flight).catch(() => {
-                            setCreateFlightError('Unable to create flight')
-                        });
+                        const f = { flight_datetime: date, origin, destination, passengers };
+                        if (flight) {
+                            editFlight({ ...f, cost: flight.cost }, flight.id);
+                        } else {
+                            createFlight(f).catch((e) => {
+                                console.error(e);
+                                setCreateFlightError('Unable to create flight')
+                            });
+                        }
                     }}
                 />
                 { createFlightError }
-                <div className={ classes.title }>Manually Add Flight</div>
                 <form noValidate autoComplete='off'>
                     <InputLabel className={ classes.topMargin }>Datetime</InputLabel>
                     <KeyboardDateTimePicker
@@ -78,7 +87,7 @@ const CreateFlight = ({ user }) => {
                         value={ date }
                         onChange={ date => setDate(date.toDate()) }
                         onError={ console.log }
-                        disablePast
+                        disablePast={ !flight}
                         format={ 'MM/DD/YY ha' }
                     />
                     <InputLabel className={ classes.topMargin }>Origin</InputLabel>
@@ -110,20 +119,21 @@ const CreateFlight = ({ user }) => {
                     </Select>
                 </form>
                 <Button
+                    disabled={ flight && origin === flight.origin && destination === flight.destination && date === flight.flight_datetime && arraysAreEqual(passengers.map(p => p.email), flight.passengers.map(p => p.email)) }
                     onClick={ () => setShowModal(true) }
                     variant={ 'outlined' }
                 >
-                    Create Flight
+                    { flight ? 'Edit' : 'Create' } Flight
                 </Button>
             </div>
         </MuiPickersUtilsProvider>
     );
 };
 
-const CreateFlightModal = ({ open, handleClose, handleSave, flight }) => (
+const ConfirmationModal = ({ open, handleClose, handleSave, flight }) => (
     <Dialog
-        open={open}
-        onClose={handleClose}
+        open={ open }
+        onClose={ handleClose }
     >
         <DialogTitle>{"Create Flight"}</DialogTitle>
         <DialogContent>
@@ -138,7 +148,24 @@ const CreateFlightModal = ({ open, handleClose, handleSave, flight }) => (
                 Cancel
             </Button>
             <Button onClick={handleSave} color="primary" autoFocus>
-                Create Flight
+                Confirm
+            </Button>
+        </DialogActions>
+    </Dialog>
+);
+
+export const CreateFlightModalWrapper = ({ flight, handleClose, user, open }) => (
+    <Dialog
+        open={ open }
+        onClose={ handleClose }
+    >
+        <DialogTitle>{"Edit Flight"}</DialogTitle>
+        <DialogContent>
+            <CreateFlight flight={ flight } user={ user }/>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={ handleClose } color="primary">
+                Cancel
             </Button>
         </DialogActions>
     </Dialog>
