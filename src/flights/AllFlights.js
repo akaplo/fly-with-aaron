@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { getFlightsForUser } from "../actions/actions";
 import Flight from "./Flight";
 
 const AllFlights = ({ flights, user }) => {

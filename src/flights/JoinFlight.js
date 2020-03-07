@@ -39,8 +39,12 @@ const styles = makeStyles({
 });
 const JoinFlight = ({ flights, refreshUser, user }) => {
     const classes = styles();
-    console.log(flights);
-    const upcomingFlights = getJoinableFlights(user.flights || [], flights);
+    const upcomingFlights = getJoinableFlights(user.flights || [], flights)
+        .sort((a, b) => {
+            if (a.flight_datetime < b.flight_datetime) return -1;
+            if (a.flight_datetime > b.flight_datetime) return 1;
+            return 0;
+        });
     const [flightToJoin, setFlightToJoin] = useState({});
     const [showComeFlyingModal, setShowModal] = useState(false);
     const [joinFlightError, setJoinFlightError] = useState('');
@@ -53,12 +57,10 @@ const JoinFlight = ({ flights, refreshUser, user }) => {
                 handleClose={ () => setShowModal(false) }
                 handleSave={ () => {
                     setShowModal(false);
-                    console.log(user, flightToJoin)
                     joinFlight(user, flightToJoin.id).then(() => {
                         setFlightToJoin({});
                         refreshUser(user.email);
                     }).catch((e) => {
-                        console.error(e)
                         setJoinFlightError('Unable to join flight ' + e)
                     });
                 }}

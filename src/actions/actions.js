@@ -2,9 +2,6 @@ import axios from 'axios';
 
 export const getAllFlights = () => axios.get('/flights');
 
-export const getFlightsForUser = (user, allFlights) =>
-    allFlights.filter(f => f.passengers.map(p => p.email).includes(user.email));
-
 export const getAllUsers = () => axios.get('/users').then(res => res.data.Items);
 
 export const getUser = (email) => axios.get(`/users/${ email }`).then(res => res.data.Item).catch(e => console.error(e));

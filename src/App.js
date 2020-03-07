@@ -5,7 +5,7 @@ import { Switch, Route, BrowserRouter as Router, useLocation } from 'react-route
 import Login from "./login/Login";
 import Dashboard from "./dashboard/Dashboard";
 import LoggedOut from "./login/LoggedOut";
-import {addFlightDataToUser, getAllFlights, getFlightsForUser, getUser} from "./actions/actions";
+import { addFlightDataToUser, getAllFlights, getUser } from "./actions/actions";
 
 const AppNR = () => {
     // Set base URL on app bootstrap
