@@ -60,3 +60,8 @@ export const sortFlights = (flights) => flights.sort((a, b) => {
 export const arraysAreEqual = (a1=[], a2=[]) => a1.length === a2.length && a1.sort().every(function(value, index) { return value === a2.sort()[index]});
 
 export const confirmAccessCode = code => axios.get(`/code_validation/${ code }`);
+
+export const confirmUser = (user, code) =>
+    axios.post(`/users/${ user.email }/code_confirmation`, {
+        code
+    });

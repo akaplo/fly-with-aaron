@@ -2,6 +2,7 @@ import React, { Fragment, useState} from 'react';
 import { Button, Input } from "@material-ui/core";
 import { CognitoAuth } from 'amazon-cognito-auth-js';
 import { confirmAccessCode } from "../actions/actions";
+import { Redirect } from 'react-router-dom';
 
 export const initCognitoSDK = () => {
     const authData = {
@@ -60,8 +61,11 @@ const ConfirmCode = ({ onConfirm }) => {
     )
 };
 
-const Login = () => {
+const Login = ({ user }) => {
     const [codeConfirmed, setCodeConfirmed] = useState(undefined);
+    if (user) {
+        return <Redirect to={ '/dashboard' } user={ user }/>
+    }
     return (
         <Fragment>
             { !codeConfirmed && <ConfirmCode onConfirm={ confirmed => setCodeConfirmed(confirmed)}/> }

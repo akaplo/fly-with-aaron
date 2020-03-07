@@ -5,6 +5,7 @@ import { Switch, Route, BrowserRouter as Router, useLocation } from 'react-route
 import Login from "./login/Login";
 import Dashboard from "./dashboard/Dashboard";
 import LoggedOut from "./login/LoggedOut";
+import AccessCheck from "./users/AccessCheck";
 import { addFlightDataToUser, getAllFlights, getUser } from "./actions/actions";
 
 const AppNR = () => {
@@ -33,17 +34,20 @@ const AppNR = () => {
       const flightPromise = updateFlights();
       return Promise.all([userPromise, flightPromise])
           .then((reses) => {
-              console.log(reses[0])
               setUser(addFlightDataToUser(reses[0], reses[1]))
-          })
+          });
     };
     // When URL hash changes, likely means a successful login
     useEffect(() => {
         try {
-            const authToken = location.hash.split('&')[0].replace('#id_token=', '');
-            axios.defaults.headers.common['Authorization'] = authToken;
-            const user = JSON.parse(atob(authToken.split('.')[1]));
-            updateUserWithFlights(user.email, user).catch(e => console.error(e));
+            const re = /id_token=([^&]+)&|$/;
+            const matches = location.hash.match(re);
+            const authToken = matches && matches.length > 1 ? matches[1] : undefined;
+            if (authToken) {
+                axios.defaults.headers.common['Authorization'] = authToken;
+                const user = JSON.parse(atob(authToken.split('.')[1]));
+                updateUserWithFlights(user.email, user).catch(e => console.error(e));
+            }
         } catch (e) {
             console.error(e);
         }
@@ -51,7 +55,17 @@ const AppNR = () => {
     return (
     <div className="App">
         <Switch>
-            <Route path={ '/' } exact component={ Login }/>
+            <Route path={ '/' } exact render={ (props) => <Login { ...props } user={ props.user || user }/> }/>
+            <Route
+                path={ '/access_check' }
+                render={ (props) =>
+                    <AccessCheck
+                        {...props }
+                        refreshUser={ updateUser }
+                        user={ props.user || user }
+                    />
+                }
+            />
             <Route
                 path={ '/dashboard' }
                 render={

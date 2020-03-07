@@ -5,8 +5,17 @@ import CreateFlight from "../flights/CreateFlight";
 import AllFlights from "../flights/AllFlights";
 import Users from "../users/Users";
 import TopBar from "./TopBar";
+import { Redirect } from 'react-router-dom';
 
 function Dashboard({ flights, getFlights, refreshUser, user }) {
+    console.log(user)
+    if (!user) {
+        return <div>Loading</div>
+    }
+    if (user && !user.access_confirmed) {
+        return <Redirect to={ '/access_check' } user={ user }/>
+    }
+
     return (
         <div>
             <TopBar user={ user }/>
@@ -34,7 +43,6 @@ function Dashboard({ flights, getFlights, refreshUser, user }) {
 }
 
 Dashboard.defaultProps = {
-    user: {},
     flights: []
 };
 
