@@ -5,7 +5,9 @@ import { Redirect } from 'react-router-dom';
 const AccessCheck = ({ refreshUser, user }) => {
     const [code, setCode ] = useState('');
     const [userConfirmed, setConfirmed] = useState(false);
-
+    if (!user) {
+        return <Redirect to={ '/' }/>;
+    }
     if (userConfirmed) {
         return <Redirect to={ '/' }/>;
     }

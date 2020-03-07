@@ -48,41 +48,43 @@ const TopBar = ({ user }) => {
         <AppBar position="static">
             <Toolbar variant={ 'dense' } className={ classes.flex }>
                 <Typography variant={ 'h5' } className={classes.name}>
-                    Fly With Aaron
+                    FlywithAaron
                 </Typography>
-                { user.admin &&
+                { user && user.admin &&
                     <Typography variant={ 'h5' } className={classes.name}>
                         Administrator View
                     </Typography>
                 }
-                <div>
-                    <Button
-                        onClick={ handleMenu }
-                    >
-                        <Typography className={classes.name} >
-                            <span>{ user.name }</span>
-                        </Typography>
-                    </Button>
-                    <Menu
-                        anchorEl={ anchorEl }
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={ Boolean(anchorEl) }
-                        onClose={ handleClose }
-                    >
-                        <MenuItem disabled onClick={ handleClose }>{ user.email || 'Not logged in' }</MenuItem>
-                        <MenuItem disabled onClick={ handleClose }>{ user.weight + 'lbs' || 'Missing weight' }</MenuItem>
-                        <MenuItem onClick={ handleClose }><span className={ classes.logout } onClick={ handleLogout }>Logout</span></MenuItem>
-                    </Menu>
-                </div>
-
+                {
+                    user &&
+                    <div>
+                        <Button
+                            onClick={ handleMenu }
+                        >
+                            <Typography className={classes.name} >
+                                <span>{ user ? user.name : '' }</span>
+                            </Typography>
+                        </Button>
+                        <Menu
+                            anchorEl={ anchorEl }
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={ Boolean(anchorEl) }
+                            onClose={ handleClose }
+                        >
+                            <MenuItem disabled onClick={ handleClose }>{ user.email }</MenuItem>
+                            <MenuItem disabled onClick={ handleClose }>{ user.weight + 'lbs' || 'Missing weight' }</MenuItem>
+                            <MenuItem onClick={ handleClose }><span className={ classes.logout } onClick={ handleLogout }>Logout</span></MenuItem>
+                        </Menu>
+                    </div>
+                }
             </Toolbar>
         </AppBar>
     );

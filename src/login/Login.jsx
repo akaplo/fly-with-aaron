@@ -1,8 +1,11 @@
 import React, { Fragment, useState} from 'react';
-import { Button, Input } from "@material-ui/core";
+import {Button, Input, InputAdornment, InputLabel} from "@material-ui/core";
 import { CognitoAuth } from 'amazon-cognito-auth-js';
 import { confirmAccessCode } from "../actions/actions";
 import { Redirect } from 'react-router-dom';
+import TopBar from "../dashboard/TopBar";
+import { makeStyles } from "@material-ui/core/styles";
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 export const initCognitoSDK = () => {
     const authData = {
@@ -41,36 +44,68 @@ const CognitoLogin = () => {
     return null;
 };
 
+
 const ConfirmCode = ({ onConfirm }) => {
+    const classes = styles();
     const [code, setCode] = useState('');
     const handleSubmit = () => confirmAccessCode(code).then(() => onConfirm(true)).catch(() => onConfirm(false));
     return (
-        <div>
-            <div>Enter your access code:</div>
-            <Input
-                inputProps={{ 'aria-label': 'secret code' }}
-                onChange={ e => setCode(e.target.value) }
-                value={ code }
-            />
+        <div className={ classes.code }>
+            <div>
+                <Input
+                    inputProps={{ 'aria-label': 'secret code' }}
+                    onChange={ e => setCode(e.target.value) }
+                    outlined
+                    startAdornment={ <InputAdornment position={ 'start' }><VpnKeyIcon/></InputAdornment>}
+                    value={ code }
+                />
+                <InputLabel>Access Code</InputLabel>
+            </div>
             <Button
+                className={ classes.button }
+                color={ 'primary' }
                 onClick={ handleSubmit }
-                variant={ 'outlined'  }>
-                Confirm Code
+                size={ 'small' }
+                variant={ 'contained' }
+            >
+                Confirm
             </Button>
         </div>
     )
 };
 
+const styles = makeStyles({
+    button: {
+        height: '2rem',
+        marginLeft: '2rem'
+    },
+    container: {
+        marginTop: '1rem'
+    },
+    code: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '1rem'
+    }
+});
+
 const Login = ({ user }) => {
+    const classes = styles();
+
     const [codeConfirmed, setCodeConfirmed] = useState(undefined);
     if (user) {
         return <Redirect to={ '/dashboard' } user={ user }/>
     }
     return (
         <Fragment>
-            { !codeConfirmed && <ConfirmCode onConfirm={ confirmed => setCodeConfirmed(confirmed)}/> }
-            { codeConfirmed === true && <CognitoLogin/> }
-            { codeConfirmed === false && <span>Bad code!</span>}
+            <TopBar/>
+            <div className={ classes.container }>
+                <span>The global access code is required before logging in:</span>
+                { !codeConfirmed && <ConfirmCode onConfirm={ confirmed => setCodeConfirmed(confirmed)}/> }
+                { codeConfirmed === true && <CognitoLogin/> }
+                { codeConfirmed === false && <span>Bad code!</span>}
+            </div>
         </Fragment>
     );
 };
