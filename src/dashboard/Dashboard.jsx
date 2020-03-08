@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import UpcomingFlights from "../flights/UpcomingFlights";
 import JoinFlight from "../flights/JoinFlight";
 import CreateFlight from "../flights/CreateFlight";
@@ -6,9 +6,17 @@ import AllFlights from "../flights/AllFlights";
 import Users from "../users/Users";
 import TopBar from "./TopBar";
 import { Redirect } from 'react-router-dom';
+import {getAllUsers} from "../actions/actions";
 
 function Dashboard({ flights, refreshFlights, refreshUser, user }) {
-    console.log(user)
+    const [allUsers, setAllUsers] = useState([]);
+
+    useEffect(() => {
+        if (user && user.admin === true) {
+            getAllUsers().then(setAllUsers);
+        }
+    }, [user]);
+
     if (!user) {
         return <div>Loading</div>
     }
@@ -31,11 +39,11 @@ function Dashboard({ flights, refreshFlights, refreshUser, user }) {
             { user.admin === true &&
                 <Fragment>
                     <div>Manually Add Flight</div>
-                    <CreateFlight user={ user }/>
+                    <CreateFlight allUsers={ allUsers } user={ user }/>
                     <hr/>
-                    <AllFlights flights={ flights } refreshFlights={ refreshFlights } user={ user }/>
+                    <AllFlights allUsers={ allUsers } flights={ flights } refreshFlights={ refreshFlights } user={ user }/>
                     <hr/>
-                    <Users flights={ flights }/>
+                    <Users allUsers={ allUsers } flights={ flights }/>
                 </Fragment>
             }
         </div>

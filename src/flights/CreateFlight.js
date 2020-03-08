@@ -52,17 +52,15 @@ const styles = makeStyles(theme => ({
         textDecoration: 'line-through'
     }
 }));
-const CreateFlight = ({ flight, user }) => {
+const CreateFlight = ({ allUsers, flight, user }) => {
     const classes = styles();
     const [date, setDate] = useState(new Date());
     const [origin, setOrigin] = useState('Plymouth');
     const [destination, setDestination] = useState(undefined);
     const [passengers, setPassengers] = useState([]);
-    const [allUsers, setAllUsers] = useState([]);
     const [showCreateModal, setShowModal] = useState(false);
     const [createFlightError, setCreateFlightError] = useState('');
     useEffect(() => {
-        getAllUsers().then(setAllUsers);
         if (flight) {
             setDate(flight.flight_datetime);
             setOrigin(flight.origin);
@@ -81,8 +79,8 @@ const CreateFlight = ({ flight, user }) => {
                         setShowModal(false);
                         const f = { flight_datetime: date, origin, destination, passengers };
                         if (flight) {
-                            const ogPax = flight.passengers.map(p => p.email);
-                            const newPax = f.passengers.map(p => p.email);
+                            const ogPax = allUsers.filter(u => flight.passengers.map(p => p.email).includes(u.email));
+                            const newPax = allUsers.filter(u => f.passengers.map(p => p.email).includes(u.email));
                             // Removed passengers are those who are in OGPax but not in newPax
                             const removedPax = ogPax.filter(p => !newPax.includes(p));
                             // Added passengers are those that were NOT in ogPax but are in newPax
@@ -101,7 +99,7 @@ const CreateFlight = ({ flight, user }) => {
                                 ...f,
                                 passengers: f.passengers.map(p => ({ email: p.email, name: p.name }))
                             })
-                                .then((res) => res.data.flight.passengers.forEach(p => addFlightToUser(p, res.data.flight)))
+                                .then((res) => allUsers.filter(u => res.data.flight.passengers.map(p => p.email).includes(u.email)).forEach(p => addFlightToUser(p, res.data.flight)))
                                 .catch((e) => {
                                 console.error(e);
                                 setCreateFlightError('Unable to create flight')
@@ -198,14 +196,14 @@ const ConfirmationModal = ({ open, handleClose, handleSave, flight }) => (
     </Dialog>
 );
 
-export const CreateFlightModalWrapper = ({ flight, handleClose, user, open }) => (
+export const CreateFlightModalWrapper = ({ allUsers, flight, handleClose, user, open }) => (
     <Dialog
         open={ open }
         onClose={ handleClose }
     >
         <DialogTitle>{"Edit Flight"}</DialogTitle>
         <DialogContent>
-            <CreateFlight flight={ flight } user={ user }/>
+            <CreateFlight allUsers={ allUsers } flight={ flight } user={ user }/>
         </DialogContent>
         <DialogActions>
             <Button onClick={ handleClose } color="primary">

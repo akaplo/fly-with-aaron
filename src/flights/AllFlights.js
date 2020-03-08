@@ -21,7 +21,7 @@ const styles = makeStyles({
     }
 });
 
-const AllFlights = ({ flights, refreshFlights, user }) => {
+const AllFlights = ({ allUsers, flights, refreshFlights, user }) => {
     const classes = styles();
     const [flightToDelete, setFlightToDelete] = useState(undefined);
     const [flightToEdit, setFlightToEdit] = useState(undefined);
@@ -31,6 +31,7 @@ const AllFlights = ({ flights, refreshFlights, user }) => {
         <div>
             <span>All Past Flights:</span>
             <CreateFlightModalWrapper
+                allUsers={ allUsers }
                 flight={ flightToEdit }
                 user={ user }
                 open={ !!flightToEdit }

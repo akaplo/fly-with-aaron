@@ -9,17 +9,12 @@ import {
     DialogContent,
     DialogContentText, DialogActions, List, ListItem
 } from "@material-ui/core";
-import {addFlightDataToUser, getAllUsers} from "../actions/actions";
 import User from "./User";
 import UpcomingFlights from "../flights/UpcomingFlights";
 
-const Users = ({ flights }) => {
-    const [allUsers, setAllUsers] = useState([]);
+const Users = ({ allUsers, flights }) => {
     const [showUserModal, setShowModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState({});
-    useEffect(() => {
-        getAllUsers().then(setAllUsers);
-    }, []);
 
     return (
         <div>
