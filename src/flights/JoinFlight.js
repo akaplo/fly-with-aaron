@@ -57,7 +57,7 @@ const JoinFlight = ({ flights, refreshUser, user }) => {
                 handleClose={ () => setShowModal(false) }
                 handleSave={ () => {
                     setShowModal(false);
-                    joinFlight(user, flightToJoin.id).then(() => {
+                    joinFlight(user, flightToJoin).then(() => {
                         setFlightToJoin({});
                         refreshUser(user.email);
                     }).catch((e) => {

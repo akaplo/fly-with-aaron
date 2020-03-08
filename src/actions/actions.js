@@ -19,31 +19,62 @@ export const getUpcomingFlights = (flights) => (
     flights.filter(f => new Date(f.flight_datetime) > new Date())
 );
 
-export const editUser = (email, phone, weight, flights) => {
+export const editFlight = (flight, id) => axios.put(`flights/${ id }`, flight);
 
-};
-
-export const editFlight = (flight, id) => {
-    axios.put(`flights/${ id }`, flight)
-};
-
-export const deleteFlight = (id) => {
-    axios.delete(`flights/${ id }`)
-};
+export const deleteFlight = (flight) =>
+    axios.delete(`flights/${ flight.id }`)
+        // remove this flight from all users' profiles
+        .then(() => flight.passengers.forEach(p => removeFlightFromUser(p, flight)))
+;
 
 // Get the upcoming flights this user isn't already on
 export const getJoinableFlights = (userFlights, allFlights) => {
     // Return all flights whose IDs are NOT in this user's list of flights
-    return getUpcomingFlights(allFlights).filter(f => !userFlights.map(fl => fl.id).includes(f.id));
+    return getUpcomingFlights(allFlights).filter(f => !userFlights.includes(f.id));
 };
 
-export const joinFlight = (user, flightID) => {
-    if (!user.flights.includes(flightID)) {
+export const joinFlight = (user, flight) =>
+    Promise.all([addPassengerToFlight(user, flight), addFlightToUser(user, flight)]);
+
+export const addPassengerToFlight = (user, flight) => {
+    if (!flight.passengers.map(p => p.email).includes(user.email)) {
+        return axios.put(`/flights/${ flight.id }`, {
+            passengers: flight.passengers.concat([{ email: user.email, name: user.name }])
+        });
+    } else {
+        return Promise.reject('Passenger already on flight');
+    }
+};
+
+export const addFlightToUser = (user, flight) => {
+    if (!user.flights || (!!user.flights && !user.flights.includes(flight.id))) {
+        const flights = user.flights || [];
         return axios.put(`/users/${ user.email }`, {
-            flights: user.flights.map(f => f.id).concat([flightID])
+            flights: flights.concat([flight.id])
         });
     } else {
         return Promise.reject('User already on flight');
+    }
+};
+
+export const removeFlightFromUser = (user, flight) => {
+    if (!user.flights || (!!user.flights && user.flights.includes(flight.id))) {
+        const flights = user.flights || [];
+        return axios.put(`/users/${ user.email }`, {
+            flights: flights.filter(f => f.id !== flight.id)
+        });
+    } else {
+        return Promise.reject('User was not on flight');
+    }
+};
+
+export const removePassengerFromFlight = (user, flight) => {
+    if (flight.passengers.map(p => p.email).includes(user.email)) {
+        return axios.put(`/flights/${ flight.id }`, {
+            passengers: flight.passengers.filter(p => p.email !== user.email)
+        });
+    } else {
+        return Promise.reject('Passenger was not on flight');
     }
 };
 

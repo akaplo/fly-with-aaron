@@ -7,7 +7,7 @@ import Users from "../users/Users";
 import TopBar from "./TopBar";
 import { Redirect } from 'react-router-dom';
 
-function Dashboard({ flights, getFlights, refreshUser, user }) {
+function Dashboard({ flights, refreshFlights, refreshUser, user }) {
     console.log(user)
     if (!user) {
         return <div>Loading</div>
@@ -22,7 +22,7 @@ function Dashboard({ flights, getFlights, refreshUser, user }) {
             { !user.admin &&
                 <Fragment>
                     <br/><br/>
-                    <UpcomingFlights user={user}/>
+                    <UpcomingFlights flights={ flights } user={user}/>
                     <br/>
                     <JoinFlight flights={ flights } refreshUser={ refreshUser } user={user}/>
                 </Fragment>
@@ -33,7 +33,7 @@ function Dashboard({ flights, getFlights, refreshUser, user }) {
                     <div>Manually Add Flight</div>
                     <CreateFlight user={ user }/>
                     <hr/>
-                    <AllFlights flights={ flights } user={ user }/>
+                    <AllFlights flights={ flights } refreshFlights={ refreshFlights } user={ user }/>
                     <hr/>
                     <Users flights={ flights }/>
                 </Fragment>

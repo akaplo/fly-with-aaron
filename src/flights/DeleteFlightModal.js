@@ -3,11 +3,11 @@ import React from "react";
 import { deleteFlight } from "../actions/actions";
 import moment from 'moment';
 
-export const DeleteFlightModal = ({ flight, handleClose, open }) => (
+export const DeleteFlightModal = ({ flight, handleClose, open, refreshFlights }) => (
     <Dialog
         open={ open }
         onClose={ () => {
-            deleteFlight(flight.id);
+            deleteFlight(flight).then(refreshFlights);
             handleClose();
         } }
     >
@@ -27,7 +27,7 @@ export const DeleteFlightModal = ({ flight, handleClose, open }) => (
             <Button
                 color="primary"
                 onClick={ () => {
-                    deleteFlight(flight.id);
+                    deleteFlight(flight).then(refreshFlights);
                     handleClose();
                 } }
             >

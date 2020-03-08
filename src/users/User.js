@@ -9,14 +9,13 @@ const styles = makeStyles({
     }
 });
 const User = ({ user }) => {
-    console.log(user.admin)
     const classes = styles();
     return (
         <div className={ classes.root }>
             { user.admin && <span>(Administrator)</span> }
             <span>{ user.name }</span>
             <span>{ user.email }</span>
-            <span>{ user.flights.length } total flights</span>
+            { !user.admin && <span>{ user.flights.length } total flights</span> }
             <span>{ user.weight || '?' }lbs</span>
         </div>
 

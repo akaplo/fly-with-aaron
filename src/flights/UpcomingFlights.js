@@ -19,11 +19,12 @@ const styles = makeStyles({
     }
 });
 
-const UpcomingFlights = ({ user }) => {
+const UpcomingFlights = ({ flights, user }) => {
     const classes = styles();
-    const futureFlights = user.flights ? user.flights.filter(f => new Date(f.flight_datetime) > new Date()) : [];
-    const pastFlights = user.flights ? user.flights.filter(f => new Date(f.flight_datetime) < new Date()) : [];
-
+    const userFlights = flights.filter(f => user.flights.includes(f.id));
+    console.log(flights, user)
+    const futureFlights = user.flights ? userFlights.filter(f => new Date(f.flight_datetime) > new Date()) : [];
+    const pastFlights = user.flights ? userFlights.filter(f => new Date(f.flight_datetime) < new Date()) : [];
     return (
         <Fragment>
             <span className={ classes.headerText }>Your upcoming flight(s)</span>

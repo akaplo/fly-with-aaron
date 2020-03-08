@@ -17,11 +17,11 @@ const AppNR = () => {
     const updateUser = (email, userToMutate={}) => getUser(email).then(u => {
         const updatedUser = { ...userToMutate, ...u };
         setUser(updatedUser);
-        if (flights.length > 0) {
-            setUser(addFlightDataToUser(updatedUser, flights))
-        } else {
+        // if (flights.length > 0) {
+        //     setUser(addFlightDataToUser(updatedUser, flights))
+        // } else {
             setUser(updatedUser);
-        }
+        // }
         return Promise.resolve({ ...userToMutate, ...u });
 
     });
@@ -34,7 +34,8 @@ const AppNR = () => {
       const flightPromise = updateFlights();
       return Promise.all([userPromise, flightPromise])
           .then((reses) => {
-              setUser(addFlightDataToUser(reses[0], reses[1]))
+              // setUser(addFlightDataToUser(reses[0], reses[1]))
+              setUser(reses[0]);
           });
     };
     // When URL hash changes, likely means a successful login
@@ -73,7 +74,7 @@ const AppNR = () => {
                         <Dashboard
                             { ...props }
                             flights={ flights }
-                            getFlights={ updateFlights }
+                            refreshFlights={ updateFlights }
                             refreshUser={ updateUser }
                             user={ user }
                         />

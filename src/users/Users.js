@@ -62,7 +62,7 @@ const UserViewModal = ({ flights, open, handleClose, user }) => (
         <DialogTitle>Viewing <b>{ user.name }</b></DialogTitle>
         <DialogContent>
             <DialogContentText>
-                <UpcomingFlights user={ addFlightDataToUser(user, flights) }/>
+                <UpcomingFlights flights={ flights } user={ user }/>
             </DialogContentText>
         </DialogContent>
         <DialogActions>

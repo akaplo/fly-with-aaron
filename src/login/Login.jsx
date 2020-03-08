@@ -13,7 +13,7 @@ export const initCognitoSDK = () => {
         AppWebDomain : 'fly-with-aaron.auth.us-east-1.amazoncognito.com', // Exclude the "https://" part.
         TokenScopesArray : ['openid','email','phone', 'aws.cognito.signin.user.admin', 'profile'],
         RedirectUriSignIn : "http://localhost:3000/dashboard",
-        RedirectUriSignOut : "http://localhost:3000/logout",
+        RedirectUriSignOut : "http://localhost:3000/",
         UserPoolId : 'us-east-1_kIaLEFq20',
         AdvancedSecurityDataCollectionFlag : false
     };
@@ -54,6 +54,7 @@ const ConfirmCode = ({ onConfirm }) => {
             <div>
                 <Input
                     inputProps={{ 'aria-label': 'secret code' }}
+                    onKeyDown={ (e) => e.keyCode === 13 && handleSubmit() }
                     onChange={ e => setCode(e.target.value) }
                     outlined
                     startAdornment={ <InputAdornment position={ 'start' }><VpnKeyIcon/></InputAdornment>}

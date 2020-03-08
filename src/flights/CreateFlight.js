@@ -9,14 +9,22 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText, DialogActions
+    DialogContentText, DialogActions, IconButton, ListItem
 } from "@material-ui/core";
-import {createFlight, getAllUsers, editFlight, arraysAreEqual} from "../actions/actions";
+import {
+    createFlight,
+    getAllUsers,
+    editFlight,
+    arraysAreEqual,
+    addFlightToUser,
+    removeFlightFromUser
+} from "../actions/actions";
 import moment from 'moment';
 import { makeStyles } from "@material-ui/core/styles";
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 const styles = makeStyles(theme => ({
     container: {
@@ -38,13 +46,17 @@ const styles = makeStyles(theme => ({
     },
     input: {
         width: '30rem'
+    },
+    queuedForDeletion: {
+        color: 'grey',
+        textDecoration: 'line-through'
     }
 }));
 const CreateFlight = ({ flight, user }) => {
     const classes = styles();
     const [date, setDate] = useState(new Date());
     const [origin, setOrigin] = useState('Plymouth');
-    const [destination, setDestination] = useState('');
+    const [destination, setDestination] = useState(undefined);
     const [passengers, setPassengers] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
     const [showCreateModal, setShowModal] = useState(false);
@@ -69,9 +81,28 @@ const CreateFlight = ({ flight, user }) => {
                         setShowModal(false);
                         const f = { flight_datetime: date, origin, destination, passengers };
                         if (flight) {
-                            editFlight({ ...f, cost: flight.cost }, flight.id);
+                            const ogPax = flight.passengers.map(p => p.email);
+                            const newPax = f.passengers.map(p => p.email);
+                            // Removed passengers are those who are in OGPax but not in newPax
+                            const removedPax = ogPax.filter(p => !newPax.includes(p));
+                            // Added passengers are those that were NOT in ogPax but are in newPax
+                            const addedPax = newPax.filter(p => !ogPax.includes(p));
+                            editFlight({
+                                ...f,
+                                cost: flight.cost,
+                                passengers: f.passengers.map(p => ({ email: p.email, name: p.name }))
+                            }, flight.id)
+                                .then(() => {
+                                    removedPax.forEach(p => removeFlightFromUser({ email: p }, flight));
+                                    addedPax.forEach(p => addFlightToUser({ email: p }, flight));
+                                });
                         } else {
-                            createFlight(f).catch((e) => {
+                            createFlight({
+                                ...f,
+                                passengers: f.passengers.map(p => ({ email: p.email, name: p.name }))
+                            })
+                                .then((res) => res.data.flight.passengers.forEach(p => addFlightToUser(p, res.data.flight)))
+                                .catch((e) => {
                                 console.error(e);
                                 setCreateFlightError('Unable to create flight')
                             });
@@ -88,7 +119,7 @@ const CreateFlight = ({ flight, user }) => {
                         onChange={ date => setDate(date.toDate()) }
                         onError={ console.log }
                         disablePast={ !flight}
-                        format={ 'MM/DD/YY ha' }
+                        format={ 'MM/DD/YY hh:mm a' }
                     />
                     <InputLabel className={ classes.topMargin }>Origin</InputLabel>
                     <Input
@@ -104,19 +135,32 @@ const CreateFlight = ({ flight, user }) => {
                         value={ destination }
                     />
                     <InputLabel className={ classes.topMargin }>Passengers</InputLabel>
-                    <Select
-                        className={ classes.input }
+                    {
+                        !!flight && flight.passengers && flight.passengers.length > 0 && flight.passengers.map(p =>
+                            <ListItem>
+                                <IconButton onClick={ () => setPassengers(flight.passengers.filter(fp => fp.email !== p.email)) }><RemoveCircleIcon/></IconButton>
+                                <span
+                                    className={ !passengers.map(p => p.email).includes(p.email) && classes.queuedForDeletion }
+                                >
+                                    { p.name }
+                                </span>
+                            </ListItem>
+                        )
+                    }
+                    { (!flight || (flight && flight.passengers && flight.passengers.length === 0)) && <Select
+                        className={classes.input}
                         multiple
-                        value={ passengers }
-                        onChange={ e => setPassengers(e.target.value) }
-                        input={<Input />}
+                        value={passengers}
+                        onChange={e => setPassengers(e.target.value)}
+                        input={<Input/>}
                     >
-                        { allUsers.filter(u => u.email !== user.email).map(u => (
-                            <MenuItem key={ u.name } value={ u }>
-                                { u.name }
+                        {allUsers.filter(u => u.email !== user.email).map(u => (
+                            <MenuItem key={u.name} value={u}>
+                                {u.name}
                             </MenuItem>
                         ))}
                     </Select>
+                    }
                 </form>
                 <Button
                     disabled={ flight && origin === flight.origin && destination === flight.destination && date === flight.flight_datetime && arraysAreEqual(passengers.map(p => p.email), flight.passengers.map(p => p.email)) }
