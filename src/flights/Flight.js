@@ -62,6 +62,11 @@ const styles = makeStyles({
     }),
     subContainer: {
         display: 'flex'
+    },
+    details: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
     }
 });
 
@@ -78,7 +83,7 @@ const Flight = ({ calColor, flight, showAll, user }) => {
                     <strong>{ date.format('MMMM') }</strong>
                     <span>{ date.format('DD') }</span>
                 </time>
-                <div>
+                <div className={ classes.details }>
                     <div className={ classes.title }>{ flight.origin } -> { flight.destination || 'TBD' }</div>
                     <span className={ classes.flex }>
                         With { showAll ?

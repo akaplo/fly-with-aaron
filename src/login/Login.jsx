@@ -81,7 +81,13 @@ const styles = makeStyles({
         marginLeft: '2rem'
     },
     container: {
-        marginTop: '1rem'
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+
     },
     code: {
         display: 'flex',
@@ -102,7 +108,7 @@ const Login = ({ user }) => {
         <Fragment>
             <TopBar/>
             <div className={ classes.container }>
-                <span>The global access code is required before logging in:</span>
+                { !codeConfirmed && <span>The global access code is required before logging in:</span> }
                 { !codeConfirmed && <ConfirmCode onConfirm={ confirmed => setCodeConfirmed(confirmed)}/> }
                 { codeConfirmed === true && <CognitoLogin/> }
                 { codeConfirmed === false && <span>Bad code!</span>}

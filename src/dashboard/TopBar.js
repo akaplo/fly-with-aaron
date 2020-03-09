@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Menu, MenuItem } from "@material-ui/core";
+import {AppBar, Toolbar, Typography, Button, Menu, MenuItem, ListItemIcon} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { initCognitoSDK } from "../login/Login";
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import CallToActionIcon from '@material-ui/icons/CallToAction';
+import LockIcon from '@material-ui/icons/Lock';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const styles = makeStyles(theme => ({
     root: {
@@ -45,7 +49,7 @@ const TopBar = ({ user }) => {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="fixed">
             <Toolbar variant={ 'dense' } className={ classes.flex }>
                 <Typography variant={ 'h5' } className={classes.name}>
                     FlywithAaron
@@ -79,9 +83,18 @@ const TopBar = ({ user }) => {
                             open={ Boolean(anchorEl) }
                             onClose={ handleClose }
                         >
-                            <MenuItem disabled onClick={ handleClose }>{ user.email }</MenuItem>
-                            <MenuItem disabled onClick={ handleClose }>{ user.weight + 'lbs' || 'Missing weight' }</MenuItem>
-                            <MenuItem onClick={ handleClose }><span className={ classes.logout } onClick={ handleLogout }>Logout</span></MenuItem>
+                            <MenuItem disabled onClick={ handleClose }>
+                                <ListItemIcon><MailOutlineIcon/></ListItemIcon>
+                                { user.email }
+                            </MenuItem>
+                            <MenuItem disabled onClick={ handleClose }>
+                                <ListItemIcon><CallToActionIcon/></ListItemIcon>
+                                { user.weight + 'lbs' || 'Missing weight' }
+                            </MenuItem>
+                            <MenuItem onClick={ handleClose }>
+                                <ListItemIcon><LockIcon/></ListItemIcon>
+                                <span className={ classes.logout } onClick={ handleLogout }>Logout</span>
+                            </MenuItem>
                         </Menu>
                     </div>
                 }
