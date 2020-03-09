@@ -75,7 +75,7 @@ const JoinFlight = ({ flights, refreshUser, user }) => {
                     const isFull = f.passengers.length === 4;
                     return <div className={classes.flightContainer} key={ f.id }>
                         <div className={ classes.left }>
-                            <Flight flight={f}/>
+                            <Flight flight={f} user={ user }/>
                         </div>
                         {
                             daysUntilFlight < 3 && !isFull &&

@@ -51,7 +51,7 @@ const AllFlights = ({ allUsers, flights, refreshFlights, user }) => {
                     <Fragment>
                         <Divider/>
                         <div className={ classes.flightContainer }>
-                            <Flight flight={f} key={ f.id } showAll={ true }/>
+                            <Flight flight={f} key={ f.id } showAll user={ user }/>
                             <div className={ classes.actions }>
                                 <IconButton onClick={ () => setFlightToEdit(f) }><EditIcon/></IconButton>
                                 <IconButton onClick={ () => setFlightToDelete(f) }><DeleteIcon/></IconButton>
@@ -65,7 +65,7 @@ const AllFlights = ({ allUsers, flights, refreshFlights, user }) => {
                 <Fragment>
                     <Divider/>
                     <div className={ classes.flightContainer }>
-                        <Flight flight={ f } key={ f.id } showAll={ true }/>
+                        <Flight flight={ f } key={ f.id } showAll user={ user }/>
                         <div className={ classes.actions }>
                             <IconButton onClick={ () => setFlightToEdit(f) }><EditIcon/></IconButton>
                             <IconButton onClick={ () => setFlightToDelete(f) }><DeleteIcon/></IconButton>
