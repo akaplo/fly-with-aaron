@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import TopBar from "../dashboard/TopBar";
 import { makeStyles } from "@material-ui/core/styles";
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import { Alert } from "@material-ui/lab";
 
 export const initCognitoSDK = () => {
     const authData = {
@@ -45,10 +46,10 @@ const CognitoLogin = () => {
 };
 
 
-const ConfirmCode = ({ onConfirm }) => {
+export const ConfirmCode = ({ confirm, onConfirm }) => {
     const classes = styles();
     const [code, setCode] = useState('');
-    const handleSubmit = () => confirmAccessCode(code).then(() => onConfirm(true)).catch(() => onConfirm(false));
+    const handleSubmit = () => confirm(code).then(() => onConfirm(true)).catch(() => onConfirm(false));
     return (
         <div className={ classes.code }>
             <div>
@@ -87,7 +88,6 @@ const styles = makeStyles({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center'
-
     },
     code: {
         display: 'flex',
@@ -109,9 +109,9 @@ const Login = ({ user }) => {
             <TopBar/>
             <div className={ classes.container }>
                 { !codeConfirmed && <span>The global access code is required before logging in:</span> }
-                { !codeConfirmed && <ConfirmCode onConfirm={ confirmed => setCodeConfirmed(confirmed)}/> }
+                { !codeConfirmed && <ConfirmCode confirm={ confirmAccessCode } onConfirm={ confirmed => setCodeConfirmed(confirmed)}/> }
                 { codeConfirmed === true && <CognitoLogin/> }
-                { codeConfirmed === false && <span>Bad code!</span>}
+                { codeConfirmed === false && <Alert severity="error">Invalid Code</Alert> }
             </div>
         </Fragment>
     );

@@ -48,7 +48,7 @@ const styles = makeStyles(theme => ({
 
 const UpcomingFlights = ({ flights, user }) => {
     const classes = styles();
-    const userFlights = flights.filter(f => user.flights.includes(f.id));
+    const userFlights = flights ? flights.filter(f => user.flights.includes(f.id)) : [];
     console.log(flights, user)
     const futureFlights = user.flights ? userFlights.filter(f => new Date(f.flight_datetime) > new Date()) : [];
     const pastFlights = user.flights ? userFlights.filter(f => new Date(f.flight_datetime) < new Date()) : [];
