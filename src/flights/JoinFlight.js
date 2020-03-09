@@ -131,8 +131,8 @@ const ComeFlyingModal = ({ open, handleClose, handleSave, flight }) => (
         <DialogTitle>{"Join this flight?"}</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                Confirm that you'd like to join this flight: { flight.origin || 'TBD' } to { flight.destination || 'TBD' }<br/>
-                { moment(flight.flight_datetime).format('dddd, MMMM Do') }
+                <p>{ moment(flight.flight_datetime).format('dddd, MMMM Do hh:mma') }</p>
+                { flight.origin || 'TBD' } to { flight.destination || 'TBD' }
             </DialogContentText>
         </DialogContent>
         <DialogActions>
