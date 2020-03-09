@@ -6,17 +6,19 @@ const styles = makeStyles({
         display: 'flex',
         justifyContent: 'space-between',
         width: '100%'
+    },
+    headerItem: {
+        width: '25%'
     }
 });
 const User = ({ user }) => {
     const classes = styles();
     return (
         <div className={ classes.root }>
-            { user.admin && <span>(Administrator)</span> }
-            <span>{ user.name }</span>
-            <span>{ user.email }</span>
-            { !user.admin && <span>{ user.flights.length } total flights</span> }
-            <span>{ user.weight || '?' }lbs</span>
+            <span className={ classes.headerItem }>{ user.name } { user.admin && '(Administrator)' }</span>
+            <span className={ classes.headerItem }>{ user.email }</span>
+            <span  className={ classes.headerItem }>{ !user.admin ? `${ user.flights.length } total flights` : '<ADMIN>' }</span>
+            <span className={ classes.headerItem }>{ user.weight || '?' }lbs</span>
         </div>
 
     );

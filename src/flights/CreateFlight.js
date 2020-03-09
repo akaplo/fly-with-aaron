@@ -1,8 +1,9 @@
 // An admin can create flights (until there's an API to pull flights from FSP)
-import React, { useEffect, useState } from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {
     Button,
     Input,
+    TextField,
     InputLabel,
     Select,
     MenuItem,
@@ -29,12 +30,11 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 const styles = makeStyles(theme => ({
     container: {
         display: 'flex',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         textSize: 'large',
         fontWeight: 'bold',
         flexDirection: 'column',
-        marginLeft: '1rem',
-        marginRight: '1rem'
+        padding: '1rem'
     },
     title: {
         textSize: 'large',
@@ -73,7 +73,7 @@ const CreateFlight = ({ allUsers, flight, user }) => {
             <div className={ classes.container }>
                 <ConfirmationModal
                     flight={ { flight_datetime: date, origin, destination, passengers } }
-                    open={ showCreateModal}
+                    open={ showCreateModal }
                     handleClose={ () => setShowModal(false) }
                     handleSave={ () => {
                         setShowModal(false);
@@ -120,17 +120,17 @@ const CreateFlight = ({ allUsers, flight, user }) => {
                         format={ 'MM/DD/YY hh:mm a' }
                     />
                     <InputLabel className={ classes.topMargin }>Origin</InputLabel>
-                    <Input
-                        className={ classes.input }
+                    <TextField                        className={ classes.input }
                         defaultValue={ 'Plymouth' }
                         onChange={ e => setOrigin(e.target.value) }
                         value={ origin }
+                        variant={ 'outlined' }
                     />
                     <InputLabel className={ classes.topMargin }>Destination</InputLabel>
-                    <Input
-                        className={ classes.input }
+                    <TextField                        className={ classes.input }
                         onChange={ e => setDestination(e.target.value) }
                         value={ destination }
+                        variant={ 'outlined' }
                     />
                     <InputLabel className={ classes.topMargin }>Passengers</InputLabel>
                     {
@@ -152,18 +152,20 @@ const CreateFlight = ({ allUsers, flight, user }) => {
                         onChange={e => setPassengers(e.target.value)}
                         input={<Input/>}
                     >
-                        {allUsers.filter(u => u.email !== user.email).map(u => (
+                        { allUsers.filter(u => u.email !== user.email).map(u => (
                             <MenuItem key={u.name} value={u}>
                                 {u.name}
                             </MenuItem>
-                        ))}
+                        )) }
                     </Select>
                     }
                 </form>
                 <Button
+                    className={ classes.topMargin }
+                    color={ 'primary' }
                     disabled={ flight && origin === flight.origin && destination === flight.destination && date === flight.flight_datetime && arraysAreEqual(passengers.map(p => p.email), flight.passengers.map(p => p.email)) }
                     onClick={ () => setShowModal(true) }
-                    variant={ 'outlined' }
+                    variant={ 'contained' }
                 >
                     { flight ? 'Edit' : 'Create' } Flight
                 </Button>

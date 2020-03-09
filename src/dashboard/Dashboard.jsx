@@ -8,11 +8,23 @@ import TopBar from "./TopBar";
 import { Redirect } from 'react-router-dom';
 import { getAllUsers } from "../actions/actions";
 import { makeStyles } from "@material-ui/core/styles";
+import {Paper} from "@material-ui/core";
 
 const styles = makeStyles({
     content: {
         padding: '1.5rem 1.5rem 0 1.5rem',
         backgroundColor: '#f5f0f0'
+    },
+    paper: {
+        padding: '1rem'
+    },
+    header: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        marginBottom: '0.5rem',
+        fontWeight: 'bold',
+        fontSize: 'large',
+        marginLeft: '0.5rem'
     }
 });
 
@@ -46,12 +58,15 @@ function Dashboard({ flights, refreshFlights, refreshUser, user }) {
                 <br/>
                 { user.admin === true &&
                 <Fragment>
-                    <div>Manually Add Flight</div>
-                    <CreateFlight allUsers={ allUsers } user={ user }/>
-                    <hr/>
+                    <h3 className={ classes.header }>Add New Flight</h3>
+                    <Paper>
+                        <CreateFlight allUsers={ allUsers } user={ user }/>
+                    </Paper>
                     <AllFlights allUsers={ allUsers } flights={ flights } refreshFlights={ refreshFlights } user={ user }/>
-                    <hr/>
-                    <Users allUsers={ allUsers } flights={ flights }/>
+                    <h3 className={ classes.header }>All Users</h3>
+                    <Paper>
+                        <Users allUsers={ allUsers } flights={ flights }/>
+                    </Paper>
                 </Fragment>
                 }
             </div>
