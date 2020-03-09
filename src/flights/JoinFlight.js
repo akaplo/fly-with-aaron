@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Button, Dialog, Divider, DialogTitle, DialogContentText, DialogActions, DialogContent, Paper, Tooltip } from "@material-ui/core";
 import { Alert } from '@material-ui/lab'
 import { getJoinableFlights, joinFlight } from "../actions/actions";
@@ -17,6 +17,8 @@ const styles = makeStyles({
         alignItems: 'center'
     },
     soonWarning: {
+        display: 'flex',
+        alignItems: 'center',
         fontStyle: 'italic',
         color: '#ff7300'
     },
@@ -77,19 +79,21 @@ const JoinFlight = ({ flights, refreshUser, user }) => {
                             <Fragment>
                                 <div className={classes.flightContainer} key={ f.id }>
                                     <div className={ classes.left }>
-                                        <Flight flight={f} user={ user }/>
+                                        <Flight flight={ f } user={ user }/>
                                     </div>
                                     {
                                         daysUntilFlight < 3 && !isFull &&
-                                        <div className={ classes.soonWarning }><Alert severity="warning">HELP! We need { 4 - f.passengers.length } more!</Alert></div>
+                                        <div className={ classes.soonWarning }><Alert severity="error">HELP! We need { 4 - f.passengers.length } more!</Alert></div>
                                     }
                                     {
                                         daysUntilFlight <= 5 && daysUntilFlight > 3 && !isFull &&
-                                        <div className={ classes.soonWarning }><Alert severity="info">Happening soon, join us!</Alert></div>
+                                        <div className={ classes.soonWarning }><Alert severity="warning">Happening really soon, join us!</Alert></div>
                                     }
                                     {
                                         f.passengers.length < 3 && daysUntilFlight > 5 && daysUntilFlight < 10 &&
-                                        <div className={ classes.soonWarning }><Alert severity="info">Needs more people!</Alert></div>
+                                        <div className={ classes.soonWarning }><Alert severity="info">
+                                            This { moment(f.flight_datetime).format('dddd') }! Need more people!
+                                        </Alert></div>
                                     }
                                     <div className={classes.join}>
                                         <Tooltip title={ isFull ? 'Flight is full' : '' } arrow>

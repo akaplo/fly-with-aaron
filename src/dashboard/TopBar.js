@@ -89,7 +89,7 @@ const TopBar = ({ user }) => {
                             </MenuItem>
                             <MenuItem disabled onClick={ handleClose }>
                                 <ListItemIcon><CallToActionIcon/></ListItemIcon>
-                                { user.weight + 'lbs' || 'Missing weight' }
+                                { user.weight ?  + `${ user.weight }lbs` : 'Missing weight' }
                             </MenuItem>
                             <MenuItem onClick={ handleClose }>
                                 <ListItemIcon><LockIcon/></ListItemIcon>

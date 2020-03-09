@@ -1,8 +1,9 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment } from 'react';
 import Flight from "./Flight";
 import { makeStyles } from "@material-ui/core/styles";
 import { Paper, Typography } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
+import { Alert } from "@material-ui/lab";
 
 const styles = makeStyles(theme => ({
     container: {
@@ -43,6 +44,12 @@ const styles = makeStyles(theme => ({
             marginBottom: '2rem',
             width: '100%'
         },
+    },
+    noFlights: {
+        display: 'flex',
+        alignItems: 'center',
+        height: '100%',
+        justifyContent: 'center'
     }
 }));
 
@@ -67,6 +74,7 @@ const UpcomingFlights = ({ flights, user }) => {
                                 <Divider/>
                             </Fragment>
                         )}
+                        { futureFlights.length === 0 && <div className={ classes.noFlights }><Alert  severity="info">None yet!</Alert></div> }
                     </Paper>
                 </div>
                 <div className={ classes.pastFlights }>
@@ -83,7 +91,7 @@ const UpcomingFlights = ({ flights, user }) => {
                             </Fragment>
                         )}
                         { pastFlights.length > 2 && <span>and { pastFlights.length - 2 } more.</span>}
-                        { pastFlights.length === 0 && <span>None yet!</span> }
+                        { pastFlights.length === 0 && <div className={ classes.noFlights }><Alert  severity="info">None yet!</Alert></div> }
                     </Paper>
                 </div>
         </div>
