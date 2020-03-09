@@ -45,11 +45,16 @@ const styles = makeStyles(theme => ({
         marginTop: '1rem',
     },
     input: {
-        width: '30rem'
+        backgroundColor: 'white'
     },
     queuedForDeletion: {
         color: 'grey',
         textDecoration: 'line-through'
+    },
+    form: {
+        display: 'flex',
+        width: '100%',
+        flexDirection: 'column'
     }
 }));
 const CreateFlight = ({ allUsers, flight, user }) => {
@@ -108,7 +113,7 @@ const CreateFlight = ({ allUsers, flight, user }) => {
                     }}
                 />
                 { createFlightError }
-                <form noValidate autoComplete='off'>
+                <form className={ classes.form } noValidate autoComplete='off'>
                     <InputLabel className={ classes.topMargin }>Datetime</InputLabel>
                     <KeyboardDateTimePicker
                         variant={ 'inline' }

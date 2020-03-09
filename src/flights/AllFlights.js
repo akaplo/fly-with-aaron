@@ -56,7 +56,7 @@ const AllFlights = ({ allUsers, flights, refreshFlights, user }) => {
                 open={ !!flightToDelete }
                 refreshFlights={ refreshFlights }
             />
-            <h2 className={ classes.header }>All Upcoming Flight(s)</h2>
+            <h2 className={ classes.header }>All Upcoming Flights</h2>
             <Paper className={ classes.flightsPaper }>
                 { futureFlights.filter(f => new Date(f.flight_datetime) > new Date()).map(f =>
                     <Fragment>
