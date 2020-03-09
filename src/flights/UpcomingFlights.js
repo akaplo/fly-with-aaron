@@ -57,7 +57,7 @@ const UpcomingFlights = ({ flights, user }) => {
             <div className={ classes.container }>
                 <div className={ classes.upcomingFlights }>
                     <Typography className={ classes.headerText }>
-                        Upcoming flight{ futureFlights.length !== 1 ? 's' : '' }
+                        Upcoming flights
                     </Typography>
                     <Paper className={ classes.flightsPaper } elevation={ 2 }>
                         { futureFlights.map(f => <Fragment>

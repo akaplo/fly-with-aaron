@@ -58,10 +58,12 @@ export const addFlightToUser = (user, flight) => {
 };
 
 export const removeFlightFromUser = (user, flight) => {
+    debugger;
     if (!user.flights || (!!user.flights && user.flights.includes(flight.id))) {
-        const flights = user.flights || [];
+        const flightIDs = user.flights || [];
+        console.log(user.email)
         return axios.put(`/users/${ user.email }`, {
-            flights: flights.filter(f => f.id !== flight.id)
+            flights: flightIDs.filter(f => f !== flight.id)
         });
     } else {
         return Promise.reject('User was not on flight');

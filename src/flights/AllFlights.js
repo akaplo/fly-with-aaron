@@ -32,7 +32,7 @@ const styles = makeStyles({
     }
 });
 
-const AllFlights = ({ allUsers, flights, refreshFlights, user }) => {
+const AllFlights = ({ allUsers, flights, refreshFlights, refreshUsers, user }) => {
     const classes = styles();
     const [flightToDelete, setFlightToDelete] = useState(undefined);
     const [flightToEdit, setFlightToEdit] = useState(undefined);
@@ -48,6 +48,7 @@ const AllFlights = ({ allUsers, flights, refreshFlights, user }) => {
                 handleClose={ () => {
                     setFlightToEdit(undefined);
                     refreshFlights();
+                    refreshUsers();
                 } }
             />
             <DeleteFlightModal

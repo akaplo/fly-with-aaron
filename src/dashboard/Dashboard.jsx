@@ -12,7 +12,7 @@ import {Paper} from "@material-ui/core";
 
 const styles = makeStyles({
     content: {
-        padding: '1.5rem 1.5rem 0 1.5rem',
+        padding: '3.5rem 1.5rem 0 1.5rem',
         backgroundColor: '#f5f0f0'
     },
     paper: {
@@ -31,11 +31,13 @@ const styles = makeStyles({
 function Dashboard({ flights, refreshFlights, refreshUser, user }) {
     const [allUsers, setAllUsers] = useState([]);
     const classes = styles();
+    const refreshUsers = () => getAllUsers().then(setAllUsers);
     useEffect(() => {
-        if (user && user.admin === true) {
-            getAllUsers().then(setAllUsers);
+        if (user && user.admin === true && allUsers.length === 0) {
+            console.log('hi')
+            setTimeout(() => refreshUsers(), 10000);
         }
-    }, [user]);
+    }, [user, allUsers]);
 
     if (!user) {
         return <div>Loading</div>
@@ -62,7 +64,7 @@ function Dashboard({ flights, refreshFlights, refreshUser, user }) {
                     <Paper>
                         <CreateFlight allUsers={ allUsers } user={ user }/>
                     </Paper>
-                    <AllFlights allUsers={ allUsers } flights={ flights } refreshFlights={ refreshFlights } user={ user }/>
+                    <AllFlights allUsers={ allUsers } flights={ flights } refreshFlights={ refreshFlights } refreshUsers={ refreshUsers } user={ user }/>
                     <h3 className={ classes.header }>All Users</h3>
                     <Paper>
                         <Users allUsers={ allUsers } flights={ flights }/>

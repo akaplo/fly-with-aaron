@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText, DialogActions, Divider, List, ListItem
+    DialogContentText, DialogActions, Divider, List, ListItem, FormGroup, FormControlLabel, Checkbox, FormControl
 } from "@material-ui/core";
 import User from "./User";
 import UpcomingFlights from "../flights/UpcomingFlights";
@@ -89,6 +89,43 @@ const UserViewModal = ({ flights, open, handleClose, user }) => (
             </Button>
         </DialogActions>
     </Dialog>
+);
+
+const addOrRemoveUserFromList = (passenger, passengers) => {
+    const paxIndex = passengers.map(p => p.email).indexOf(passenger.email);
+    if (paxIndex === -1) {
+        // add pax
+        return passengers.concat([passenger])
+    } else {
+        // remove pax
+        return passengers.filter(p => p.email !== passenger.email);
+    }
+};
+
+export const UserCheckboxes = ({ users, selectedUsers, onCheckedCallback }) => (
+    <FormControl component="fieldset">
+        { users
+            .map(u => ({ email: u.email, name: u.name }))
+            .map(u => (
+                <Fragment>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={ selectedUsers.map(p => p.email).includes(u.email) }
+                                    onChange={ (e) => {
+                                        onCheckedCallback(addOrRemoveUserFromList(JSON.parse(e.target.value), selectedUsers));
+                                    } }
+                                    value={ JSON.stringify(u) }
+                                />
+                            }
+                            label={ u.name }
+                        />
+                    </FormGroup>
+                </Fragment>
+            ))
+        }
+    </FormControl>
 );
 
 export default Users;

@@ -1,20 +1,16 @@
 // An admin can create flights (until there's an API to pull flights from FSP)
-import React, {Fragment, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {
     Button,
-    Input,
     TextField,
     InputLabel,
-    Select,
-    MenuItem,
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText, DialogActions, IconButton, ListItem
+    DialogContentText, DialogActions, IconButton, ListItem,
 } from "@material-ui/core";
 import {
     createFlight,
-    getAllUsers,
     editFlight,
     arraysAreEqual,
     addFlightToUser,
@@ -26,8 +22,9 @@ import { KeyboardDateTimePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import {UserCheckboxes} from "../users/Users";
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles({
     container: {
         display: 'flex',
         alignItems: 'center',
@@ -55,8 +52,14 @@ const styles = makeStyles(theme => ({
         display: 'flex',
         width: '100%',
         flexDirection: 'column'
+    },
+    checkboxesContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        margin: '0 3rem'
     }
-}));
+});
+
 const CreateFlight = ({ allUsers, flight, user }) => {
     const classes = styles();
     const [date, setDate] = useState(new Date());
@@ -96,15 +99,24 @@ const CreateFlight = ({ allUsers, flight, user }) => {
                                 passengers: f.passengers.map(p => ({ email: p.email, name: p.name }))
                             }, flight.id)
                                 .then(() => {
-                                    removedPax.forEach(p => removeFlightFromUser({ email: p }, flight));
-                                    addedPax.forEach(p => addFlightToUser({ email: p }, flight));
+                                    console.log(removedPax, addedPax);
+                                    removedPax.forEach(p => removeFlightFromUser(p, flight));
+                                    addedPax.forEach(p => addFlightToUser(p, flight));
                                 });
                         } else {
                             createFlight({
                                 ...f,
                                 passengers: f.passengers.map(p => ({ email: p.email, name: p.name }))
                             })
-                                .then((res) => allUsers.filter(u => res.data.flight.passengers.map(p => p.email).includes(u.email)).forEach(p => addFlightToUser(p, res.data.flight)))
+                                .then((res) => {
+                                    // Add this flight to each appropriate user's profile
+                                    allUsers.filter(u => res.data.flight.passengers.map(p => p.email).includes(u.email))
+                                        .forEach(p => addFlightToUser(p, res.data.flight));
+                                    // Then clear out all this junk
+                                    setPassengers([]);
+                                    setOrigin('Plymouth');
+                                    setDestination(undefined);
+                                })
                                 .catch((e) => {
                                 console.error(e);
                                 setCreateFlightError('Unable to create flight')
@@ -138,6 +150,9 @@ const CreateFlight = ({ allUsers, flight, user }) => {
                         variant={ 'outlined' }
                     />
                     <InputLabel className={ classes.topMargin }>Passengers</InputLabel>
+                    <div className={ classes.checkboxesContainer }>
+                        <UserCheckboxes onCheckedCallback={ setPassengers } selectedUsers={ passengers } users={ allUsers.filter(u => u.email !== user.email) }/>
+                    </div>
                     {
                         !!flight && flight.passengers && flight.passengers.length > 0 && flight.passengers.map(p =>
                             <ListItem>
@@ -149,20 +164,6 @@ const CreateFlight = ({ allUsers, flight, user }) => {
                                 </span>
                             </ListItem>
                         )
-                    }
-                    { (!flight || (flight && flight.passengers && flight.passengers.length === 0)) && <Select
-                        className={classes.input}
-                        multiple
-                        value={passengers}
-                        onChange={e => setPassengers(e.target.value)}
-                        input={<Input/>}
-                    >
-                        { allUsers.filter(u => u.email !== user.email).map(u => (
-                            <MenuItem key={u.name} value={u}>
-                                {u.name}
-                            </MenuItem>
-                        )) }
-                    </Select>
                     }
                 </form>
                 <Button
