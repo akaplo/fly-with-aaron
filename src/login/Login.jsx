@@ -13,8 +13,8 @@ export const initCognitoSDK = () => {
         ClientId : '6requ0b4e047k3nae12omq18v', // Your client id here
         AppWebDomain : 'fly-with-aaron.auth.us-east-1.amazoncognito.com', // Exclude the "https://" part.
         TokenScopesArray : ['openid','email','phone', 'aws.cognito.signin.user.admin', 'profile'],
-        RedirectUriSignIn : "http://localhost:3000/dashboard",
-        RedirectUriSignOut : "http://localhost:3000/",
+        RedirectUriSignIn : "https://flywithaaron.team/dashboard",
+        RedirectUriSignOut : "https://flywithaaron.team/",
         UserPoolId : 'us-east-1_kIaLEFq20',
         AdvancedSecurityDataCollectionFlag : false
     };
